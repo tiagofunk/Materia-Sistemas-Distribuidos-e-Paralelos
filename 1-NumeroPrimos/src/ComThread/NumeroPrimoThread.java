@@ -26,7 +26,7 @@ public class NumeroPrimoThread extends Thread{
             }
         }
         
-        System.out.println( numeros );
+        System.out.println( inicio + "-" + fim + ": "+ numeros );
     }
 
     public void setIntervalo(int inicio, int fim) {
