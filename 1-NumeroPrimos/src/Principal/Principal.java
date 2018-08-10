@@ -8,9 +8,25 @@ public class Principal {
 
     public static void main(String[] args) {
         final int inicio = 2;
-        final int fim = 1000000;
+        final int fim = 100;
         
-        testarComNThread(inicio, fim);
+        switch( args[0] ){
+            case "0":
+                testarSemThread(inicio, fim);
+                break;
+                
+            case "1":
+                testarCom1Thread(inicio, fim);
+                break;
+                
+            case "2":
+                testarCom2Thread(inicio, fim);
+                break;
+                
+            case "n":
+                testarComNThread(inicio, fim);
+                break;
+        }
     }
     
     private static void testarSemThread(int inicio, int fim){
