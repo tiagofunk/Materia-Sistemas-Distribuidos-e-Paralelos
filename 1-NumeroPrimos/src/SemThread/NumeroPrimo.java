@@ -7,7 +7,7 @@ public class NumeroPrimo {
     
     public void buscarNumerosPrimos(int inicio, int fim ){
         boolean primo;
-        List<Integer> numeros = new ArrayList<>();
+//        List<Integer> numeros = new ArrayList<>();
         
         for( int i = inicio; i <= fim; i++ ){
             primo = true;
@@ -18,11 +18,12 @@ public class NumeroPrimo {
                 }
             }
             if( primo ){
-                numeros.add( i );
+//                numeros.add( i );
+                System.out.println( i );
             }
         }
         
-        System.out.println(numeros);
+//        System.out.println(numeros);
     }
     
     public void buscarNumerosPrimosGrifo(int inicio, int fim ){

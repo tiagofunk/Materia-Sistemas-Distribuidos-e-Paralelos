@@ -8,9 +8,10 @@ public class Principal {
 
     public static void main(String[] args) {
         final int inicio = 2;
-        final int fim = 100;
+        final int fim = 1000000;
+        String opcao = "n";
         
-        switch( args[0] ){
+        switch( opcao ){
             case "0":
                 testarSemThread(inicio, fim);
                 break;
@@ -30,7 +31,7 @@ public class Principal {
     }
     
     private static void testarSemThread(int inicio, int fim){
-        new NumeroPrimo().buscarNumerosPrimos(inicio, fim);
+        new NumeroPrimo().buscarNumerosPrimosGrifo(inicio, fim);
     }
     
     private static void testarCom1Thread(int inicio, int fim){
@@ -49,13 +50,13 @@ public class Principal {
     }
     
     private static void testarComNThread( int inicio, int fim ){
-        int i;
+        int i, intervalo = 100;
         NumeroPrimoThread np;
         ArrayList<NumeroPrimoThread> list = new ArrayList<>();
         
-        for( i = inicio; i < fim; i += 10 ){
+        for( i = inicio; i < fim; i += intervalo ){
             np = new NumeroPrimoThread();
-            np.setIntervalo(i, i+10);
+            np.setIntervalo(i, i+intervalo);
             list.add( np );
         }
         

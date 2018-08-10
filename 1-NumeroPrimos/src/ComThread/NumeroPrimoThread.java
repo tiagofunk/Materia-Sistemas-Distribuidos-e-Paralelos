@@ -7,7 +7,7 @@ public class NumeroPrimoThread extends Thread{
     
     private int inicio;
     private int fim;
-    private List<Integer> numeros = new ArrayList<>();
+//    private List<Integer> numeros = new ArrayList<>();
     
     @Override
     public void run(){
@@ -22,11 +22,12 @@ public class NumeroPrimoThread extends Thread{
                 }
             }
             if (primo) {
-                numeros.add(i);
+//                numeros.add(i);
+                System.out.println( i );
             }
         }
         
-        System.out.println( inicio + "-" + fim + ": "+ numeros );
+//        System.out.println( inicio + "-" + fim + ": "+ numeros );
     }
 
     public void setIntervalo(int inicio, int fim) {
