@@ -6,25 +6,32 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class ContadorPalavras {
+public class ContadorPalavrasComThread extends Thread{
 
     private int[] indices;
     private String caminhoArquivo;
+    private String busca;
+    
+    private int qtd = 0;
 
-    public ContadorPalavras(int inicio, int fim, String caminhoArquivo) {
+    public ContadorPalavrasComThread(int inicio, int fim, String busca, String caminhoArquivo) {
         indices = new int[ fim-inicio ];
         for( int i = 0; i < (fim-inicio); i++ ){
             indices[ i ] = i + inicio;
         }
+        this.busca = busca;
         this.caminhoArquivo = caminhoArquivo;
     }
     
-    public void contar( String busca ){
-        int soma = 0;
+    @Override
+    public void run(){
         for( int i : indices ){
-            soma += lerPalavras( busca, i);
+            qtd += lerPalavras( busca, i);
         }
-        System.out.println( soma );
+    }
+    
+    public int getQtd(){
+        return qtd;
     }
 
     private int lerPalavras(String busca, int arquivo) {
