@@ -8,12 +8,12 @@ public class Principal {
     public static void main(String[] args) throws InterruptedException {
         String palavra = args[ 0 ];
         String numeroThreads = args[ 1 ];
-        final String CAMINHO = "C:\\Users\\10516125940\\Documents\\GitHub\\DistribuidosParalelos\\Arquivos\\3-CasosTestePalavrasArquivos\\";
+        String caminho = buscarLink();
         
         if( numeroThreads.equals( "n" )){
-            semThread(CAMINHO, palavra);
+            semThread(caminho, palavra);
         }else{
-            comThread(CAMINHO, palavra, Integer.parseInt( numeroThreads ) );
+            comThread(caminho, palavra, Integer.parseInt( numeroThreads ) );
         }
     }
     
@@ -134,5 +134,17 @@ public class Principal {
         }
         
         System.out.println("Soma: " + soma );
+    }
+    
+    public static String buscarLink(){
+        String sistema = System.getProperty("os.name").toLowerCase();
+        if( sistema.startsWith("linux") ){
+            return "/home/tiago/Repositorios/Github/DistribuidosParalelos/"
+                    + "Arquivos/3-CasosTestePalavrasArquivos/";
+        }if( sistema.startsWith( "Windows" ) ){
+            return "C:\\Users\\10516125940\\Documents\\GitHub\\DistribuidosParalelos"
+                    + "\\Arquivos\\3-CasosTestePalavrasArquivos\\";
+        }
+        throw new RuntimeException( "Tipo de sistema não suportado" );
     }
 }
