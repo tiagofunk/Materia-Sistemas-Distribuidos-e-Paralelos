@@ -10,31 +10,19 @@ import java.util.List;
 
 public class Principal {
     
-    private static final String CAMINHO_1A = "caso1/A.TXT";
-    private static final String CAMINHO_1B = "caso1/B.TXT";
-    private static final String CAMINHO_2A = "caso2/A.TXT";
-    private static final String CAMINHO_2B = "caso2/B.TXT";
-    private static final String CAMINHO_3A = "caso3/A.TXT";
-    private static final String CAMINHO_3B = "caso3/B.TXT";
-    
     public static void main(String[] args) {
-//        final String A = CAMINHO_1A;final String B = CAMINHO_1B;
-        final String A = CAMINHO_2A;final String B = CAMINHO_2B;
-//        final String A = CAMINHO_3A;final String B = CAMINHO_3B;
+        final String A = buscarLink( 1, "A" );final String B = buscarLink( 1, "B");
         comThread( A, B );
     }
     
     private static int[][] carregarMatriz(String nomeArquivo){
-        final String CAMINHO = 
-           "/home/tiago/Repositorios/Github/DistribuidosParalelos/Arquivos/" +
-            "2-CasosTesteMultiplicacaoMatrizes/";
         int linhas, colunas, contador = 0;
         int numeros[], matriz[][] = null;
         String linha, conteudo[];
         BufferedReader br;
         
         try {
-            br = new BufferedReader(new FileReader(new File(CAMINHO + nomeArquivo)));
+            br = new BufferedReader(new FileReader(new File( nomeArquivo )));
             
             linhas = Integer.parseInt( br.readLine() );
             colunas = Integer.parseInt( br.readLine() );
@@ -106,5 +94,19 @@ public class Principal {
         for( MultiplicaLinhaComThread m : lista ){
             m.start();
         }
+    }
+    
+    public static String buscarLink( int caso, String arquivo ){
+        String sistema = System.getProperty("os.name").toLowerCase();
+        if( sistema.startsWith( "linux" ) ){
+            return "/home/tiago/Repositorios/Github/DistribuidosParalelos/"
+                    + "Arquivos/2-CasosTesteMultiplicacaoMatrizes/caso" + 
+                    caso + "/" + arquivo + ".TXT";
+        }if( sistema.startsWith( "Windows" ) ){
+            return "C:\\Users\\10516125940\\Documents\\GitHub\\DistribuidosParalelos"
+                    + "\\Arquivos\\2-CasosTesteMultiplicacaoMatrizes\\caso" +
+                    caso + "\\" + arquivo + ".txt";
+        }
+        throw new RuntimeException( "Tipo de sistema não suportado" );
     }
 }
