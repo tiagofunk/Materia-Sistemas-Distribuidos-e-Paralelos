@@ -2,16 +2,15 @@ package codigo;
 
 import java.util.concurrent.Semaphore;
 
-public class ContadorSequencialSemaforo implements ContadorSequencial{
+public class ContadorSequencialSemaforo {
     
     private long valorSequencial;
     private static ContadorSequencialSemaforo contador;
     
-    private static Semaphore semaforo;
+    private static Semaphore semaforo = new Semaphore( 1 );
     
     private ContadorSequencialSemaforo() {
         valorSequencial = 0;
-        semaforo = new Semaphore( 1 );
     }
     
     public static ContadorSequencialSemaforo getInstance() {

@@ -1,6 +1,6 @@
 package codigo;
 
-public class ContadorSequencialMonitor implements ContadorSequencial{
+public class ContadorSequencialMonitor {
     
     private long valorSequencial;
     private static ContadorSequencialMonitor contador;
