@@ -2,11 +2,12 @@ package codigo;
 
 public class Executar {
     public static void main(String[] args) throws InterruptedException {
-        Armazem a = new Armazem();
-        ArmazemSemaforo as = new ArmazemSemaforo();
+//        Armazem a = new ArmazemSimples();
+//        Armazem a = new ArmazemSemaforo();
+        Armazem a = new ArmazemMonitor();
         
-        Produtor p1 = new Produtor( as, 5 );
-        Produtor p2 = new Produtor( as, 5 );
+        Produtor p1 = new Produtor( a, 5 );
+        Produtor p2 = new Produtor( a, 5 );
         
         p1.start();
         p2.start();
@@ -14,6 +15,6 @@ public class Executar {
         p1.join();
         p2.join();
         
-        as.imprimir();
+        a.imprimir();
     }
 }

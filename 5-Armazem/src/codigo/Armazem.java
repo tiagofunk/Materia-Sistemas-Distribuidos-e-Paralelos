@@ -1,18 +1,10 @@
 package codigo;
 
-public class Armazem {
+public abstract class Armazem {
     
-    private String[] itens = new String[ 10 ];
-    private int posicaoLivre = 0;
+    protected String[] itens = new String[ 10 ];
+    protected int posicaoLivre = 0;
     
-    public void addItem( String item ){
-        itens[ posicaoLivre ] = item;
-        posicaoLivre++;
-    }
-    
-    public void imprimir(){
-        for( int i = 0; i < itens.length; i++ ){
-            System.out.println( i + "-" + itens[ i ] );
-        }
-    }
+    public abstract void addItem( String item );
+    public abstract void imprimir();
 }
