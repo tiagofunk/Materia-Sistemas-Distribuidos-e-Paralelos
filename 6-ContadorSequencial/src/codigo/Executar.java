@@ -6,7 +6,7 @@ import java.util.List;
 public class Executar {
     
     public static void main(String[] args) {
-        final int TIPO_CONTADOR = 3;
+        final int TIPO_CONTADOR = 2;
         final int NUMERO_THREADS = 10;
         List<MinhaThread> lt = new ArrayList<>();
         

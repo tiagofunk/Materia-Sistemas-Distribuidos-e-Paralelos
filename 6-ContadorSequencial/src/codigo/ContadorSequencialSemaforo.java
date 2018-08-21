@@ -27,7 +27,14 @@ public class ContadorSequencialSemaforo {
     }
     
     public long next(){
-        return valorSequencial++;
+        try {
+            semaforo.acquire();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        valorSequencial++;
+        semaforo.release();
+        return valorSequencial;
     }
     
 }

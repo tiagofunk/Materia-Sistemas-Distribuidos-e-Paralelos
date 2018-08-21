@@ -9,7 +9,10 @@ public class MinhaThread extends Thread{
     public MinhaThread(int tipoContador) {
         this.tipoContador = tipoContador;
         valores = new long[ QUANTIDADE_NUMEROS ];
-        
+    }
+    
+    @Override
+    public void run(){
         switch (tipoContador){
             case 1:
                 for( int i = 0; i < QUANTIDADE_NUMEROS; i++ ){
@@ -27,15 +30,11 @@ public class MinhaThread extends Thread{
                 }
                 break;
         }
-    }
-    
-    @Override
-    public void run(){
         String s = "[";
         for( int i = 0; i < QUANTIDADE_NUMEROS; i++ ){
             s += valores[ i ] + ",";
         }
         s += "]";
-        System.out.println( s );
+        System.out.println( this.getId() + "-" + s );
     }
 }

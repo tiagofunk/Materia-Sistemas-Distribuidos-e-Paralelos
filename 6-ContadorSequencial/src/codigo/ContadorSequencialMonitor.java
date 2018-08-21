@@ -17,7 +17,10 @@ public class ContadorSequencialMonitor {
     }
     
     public long next(){
-        return valorSequencial++;
+        synchronized( this ){
+            valorSequencial++;
+        }
+        return valorSequencial;
     }
     
 }
