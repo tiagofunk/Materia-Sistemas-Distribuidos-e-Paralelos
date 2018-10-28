@@ -1,6 +1,5 @@
 package Principal;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
@@ -11,8 +10,8 @@ public class Principal {
         
         System.out.println("INIT");
         
-        CriadorConexoes cc = new CriadorConexoes();
-        List<SocketThread> listaConexoes = cc.criarConexoes();
+        Conexao c = new Conexao();
+        c.iniciar();
     }
     
 }
