@@ -31,7 +31,7 @@ public class SocketThread extends Thread{
         DatagramPacket recebido;
         
         try {
-            socket = new DatagramSocket( port );
+            socket = new DatagramSocket();
             socket.setReuseAddress(true);
             
             buffer = Constantes.VOTE_REQUEST.getBytes();
