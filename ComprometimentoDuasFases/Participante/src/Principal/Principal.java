@@ -10,8 +10,13 @@ public class Principal {
         
         System.out.println("INIT");
         
-        Conexao c = new Conexao();
-        c.iniciar();
+        ProcessadorMensagem pm = new ProcessadorMensagem();
+        pm.setResposta("sim");
+        
+        Conexao c = Conexao.getInstance();
+        c.addObservador( pm );
+        
+        c.receber();
     }
     
 }
