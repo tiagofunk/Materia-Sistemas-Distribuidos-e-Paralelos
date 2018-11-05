@@ -10,8 +10,7 @@ public class LeitorConfiguracoes {
     private final String CAMINHO_ARQUIVO = "conf.txt";
     private final String CARACTER_SEPARADOR = ":";
     
-    public String[][] lerConfiguracoes() {
-        String linha;
+    public String[][] lerConfiguracoesGlobais() {
         String conteudo[];
         String retorno[][] = null;
         

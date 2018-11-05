@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ConexaoAtiva implements Runnable{
+public class ConexaoAtiva extends Conexao{
     
     private String host;
     private int port;
@@ -16,8 +14,6 @@ public class ConexaoAtiva implements Runnable{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     
-    private List<ObservadorConexao> listaObservadores = new ArrayList<>();
-    
     public ConexaoAtiva(String host, String port) throws IOException {
         this.host = host;
         try{
@@ -25,26 +21,19 @@ public class ConexaoAtiva implements Runnable{
         }catch(NumberFormatException ex ){
             throw new IllegalArgumentException("Parâmetro porta para SocketThread deve ser um número.");
         }
-        System.out.println(host);
-        System.out.println(this.port);
+        
         socket = new Socket( host, this.port );
         output = new ObjectOutputStream( socket.getOutputStream() );
         input  = new ObjectInputStream( socket.getInputStream() );
     }
     
-    public void addObservador( ObservadorConexao obs ){
-        listaObservadores.add( obs );
-    }
-    
-    public void removeObservador( ObservadorConexao obs ){
-        listaObservadores.remove( obs );
-    }
-    
+    @Override
     public void enviar( String mensagem ) throws IOException{
         output.writeUTF( mensagem );
         output.flush();
     }
     
+    @Override
     public void fecharConexao() throws IOException {
         input.close();
         output.close();
@@ -56,9 +45,6 @@ public class ConexaoAtiva implements Runnable{
         String mensagem;
         
         try {
-            socket = new Socket(host, port);
-            input = new ObjectInputStream(socket.getInputStream());
-            
             while( true ){
                 mensagem = input.readUTF();
                 

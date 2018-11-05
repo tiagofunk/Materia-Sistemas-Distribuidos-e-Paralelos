@@ -5,10 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ConexaoPassiva implements Runnable{
+public class ConexaoPassiva extends Conexao{
     
     private String host;
     private int port;
@@ -18,31 +16,22 @@ public class ConexaoPassiva implements Runnable{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     
-    private List<ObservadorConexao> listaObservadores = new ArrayList<>();
-    
     public ConexaoPassiva(String host, String port) throws IOException {
         this.host = host;
         try{
-            System.out.println( port );
             this.port = Integer.parseInt(port);
         }catch(NumberFormatException ex ){
             throw new IllegalArgumentException("Parâmetro porta para SocketThread deve ser um número.");
         }
     }
     
-    public void addObservador( ObservadorConexao obs ){
-        listaObservadores.add( obs );
-    }
-    
-    public void removeObservador( ObservadorConexao obs ){
-        listaObservadores.remove( obs );
-    }
-    
+    @Override
     public void enviar( String mensagem ) throws IOException{
         output.writeUTF( mensagem );
         output.flush();
     }
     
+    @Override
     public void fecharConexao() throws IOException {
         input.close();
         output.close();
