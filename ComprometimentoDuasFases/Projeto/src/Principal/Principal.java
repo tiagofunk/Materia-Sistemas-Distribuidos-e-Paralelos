@@ -9,8 +9,10 @@ import model.Sessao;
 import model.TipoAgente;
 import model.TipoResposta;
 import model.Votacao;
+import server.Conexao;
 import server.ConexaoAtiva;
 import server.CriadorConexoes;
+import utils.LeitorConfiguracoes;
 
 public class Principal {
     
@@ -35,15 +37,15 @@ public class Principal {
     private static void coordenador(){
         
         try {
-            List<ConexaoAtiva> listaConexoes = new CriadorConexoes().criarConexoes();
+            List<Conexao> listaConexoes = new CriadorConexoes().criarConexoes();
             Sessao s = new Sessao(TipoAgente.COORDENADOR, new Votacao( listaConexoes.size() ) );
-            ProcessadorMensagem pm = new ProcessadorMensagem( s );
-            for( ConexaoAtiva c: listaConexoes ){
+            ProcessadorMensagem pm = new ProcessadorMensagem( s, listaConexoes );
+            for( Conexao c: listaConexoes ){
                 c.addObservador( pm );
                 Thread t = new Thread( c );
                 t.start();
-                c.enviar( Constantes.VOTE_REQUEST );
             }
+            pm.iniciarRequest();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -60,11 +62,12 @@ public class Principal {
         }
         
         Sessao s = new Sessao(TipoAgente.PARTICIPANTE, tr);
-        ProcessadorMensagem pm = new ProcessadorMensagem( s );
+        ProcessadorMensagem pm = new ProcessadorMensagem( s, null);
         ConexaoPassiva c;
+        String conf = new LeitorConfiguracoes().lerConfiguracoesLocais();
 
         try {
-            c = new ConexaoPassiva("127.0.0.1", "56001");
+            c = new ConexaoPassiva( conf );
             c.addObservador( pm );
             Thread t = new Thread( c );
             t.start();

@@ -8,7 +8,6 @@ import java.net.Socket;
 
 public class ConexaoPassiva extends Conexao{
     
-    private String host;
     private int port;
     
     private Socket socket;
@@ -16,8 +15,7 @@ public class ConexaoPassiva extends Conexao{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     
-    public ConexaoPassiva(String host, String port) throws IOException {
-        this.host = host;
+    public ConexaoPassiva(String port) throws IOException {
         try{
             this.port = Integer.parseInt(port);
         }catch(NumberFormatException ex ){
