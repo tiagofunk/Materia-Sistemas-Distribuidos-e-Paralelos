@@ -7,6 +7,10 @@ public class Sessao {
     
     private Votacao votacao;
     
+    private int indiceFalhaVoteRequest;
+    private int indiceFalhaVoteGlobal;
+    private boolean falhaVoteLocal;
+    
     public Sessao(TipoAgente agente, Votacao votacao) {
         this.agente = agente;
         this.votacao = votacao;
@@ -28,5 +32,31 @@ public class Sessao {
     public Votacao getVotacao() {
         return votacao;
     }
+
+    public int getIndiceFalhaVoteRequest() {
+        return indiceFalhaVoteRequest;
+    }
+
+    public void setIndiceFalhaVoteRequest(int indiceFalhaVoteRequest) {
+        this.indiceFalhaVoteRequest = indiceFalhaVoteRequest;
+    }
+
+    public int getIndiceFalhaVoteGlobal() {
+        return indiceFalhaVoteGlobal;
+    }
+
+    public void setIndiceFalhaVoteGlobal(int indiceFalhaVoteGlobal) {
+        this.indiceFalhaVoteGlobal = indiceFalhaVoteGlobal;
+    }
+
+    public boolean isFalhaVoteLocal() {
+        return falhaVoteLocal;
+    }
+
+    public void setFalhaVoteLocal(boolean falhaVoteLocal) {
+        this.falhaVoteLocal = falhaVoteLocal;
+    }
+    
+    
     
 }

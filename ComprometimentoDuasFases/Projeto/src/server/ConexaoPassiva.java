@@ -15,7 +15,8 @@ public class ConexaoPassiva extends Conexao{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     
-    public ConexaoPassiva(String port) throws IOException {
+    public ConexaoPassiva(int timeout, String port) throws IOException {
+        super(timeout);
         try{
             this.port = Integer.parseInt(port);
         }catch(NumberFormatException ex ){
@@ -43,6 +44,7 @@ public class ConexaoPassiva extends Conexao{
         try {
             serverSocket = new ServerSocket( port );
             socket = serverSocket.accept();
+            socket.setSoTimeout( super.timeout );
 
             output = new ObjectOutputStream( socket.getOutputStream() );
             input  = new ObjectInputStream( socket.getInputStream() );
@@ -59,7 +61,11 @@ public class ConexaoPassiva extends Conexao{
                 }
             }
             
-        } catch (IOException ex) {
+        } catch (java.net.SocketTimeoutException ex) {
+            for( ObservadorConexao obs : listaObservadores ){
+                obs.avisarTimeout( this );
+            }
+        }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {
             ex.printStackTrace();

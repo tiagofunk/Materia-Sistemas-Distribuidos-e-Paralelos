@@ -14,7 +14,8 @@ public class ConexaoAtiva extends Conexao{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     
-    public ConexaoAtiva(String host, String port) throws IOException {
+    public ConexaoAtiva(int timeout, String host, String port) throws IOException {
+        super( timeout );
         this.host = host;
         try{
             this.port = Integer.parseInt(port);
@@ -57,7 +58,9 @@ public class ConexaoAtiva extends Conexao{
                 }
             }
             
-        } catch (IOException ex) {
+        } catch (java.io.EOFException ex){
+            System.out.println("Alguém fechou a conexão.");
+        }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
