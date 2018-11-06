@@ -28,7 +28,7 @@ public class Principal {
         if( args[0].equals("c") ){
             coordenador( TIMEOUT, args[1] );
         }else if( args[0].equals("p") ){
-            participante( args[1], TIMEOUT, "" );
+            participante( args[1], TIMEOUT );
         }else{
             throw new RuntimeException("Argumento errado para tipo de agente: " + args[0] );
         }
@@ -72,7 +72,7 @@ public class Principal {
         }
     }
     
-    private static void participante( String opcaoVotacao, int timeout, String tipoFalha ){
+    private static void participante( String opcaoVotacao, int timeout ){
         TipoResposta tr;
         if( opcaoVotacao.equals("p") ){
             tr = TipoResposta.POSITIVA;
