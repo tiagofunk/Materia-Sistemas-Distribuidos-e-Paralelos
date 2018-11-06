@@ -1,0 +1,40 @@
+A aplicação é dividida em Coordenador e Cliente.
+
+Para rodar o coordenador:
+
+Insira no arquivo global.txt, que deve estar na mesma pasta que o .jar:
+	Número de máquinas que o coordenador deve se conectar.
+	Nas proximas linhas inserir o IP de cada máquina com a porta, separados por ponto e vírgula.
+
+Exemplo:
+
+5
+127.0.0.1:56001
+127.0.0.1:56002
+127.0.0.1:56003
+127.0.0.1:56004
+127.0.0.1:56005
+
+Para rodar o jar:
+java -jar Projeto.jar c <F>
+
+O parametro c indica que o arquivo execute como um coordenador.
+O parametro F indica o tipo de falha que o coordenador vai lançar.
+	f0 - para nenhuma falha.
+	f1 - para não enviar o VOTE_REQUEST para uma das máquinas.
+
+Para rodar o participante:
+
+Insira no arquivo local.txt, que deve estar na mesma pasta que o .jar:
+	número da porta que deve aguardar a conexão.
+	
+Exemplo:
+
+56001
+
+Para rodar o jar:
+java -jar Projeto.jar p <R>
+O parametro p indica que o arquivo execute como um participante.
+O parametro R indica o tipo de resposta que o participante deve responder ao receber o VOTE_REQUEST.
+	p - para resposta positiva.
+	n - para resposta negativa.
