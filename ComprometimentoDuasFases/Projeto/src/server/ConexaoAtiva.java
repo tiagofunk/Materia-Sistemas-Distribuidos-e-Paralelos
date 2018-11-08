@@ -59,7 +59,9 @@ public class ConexaoAtiva extends Conexao{
             }
             
         } catch (java.io.EOFException ex){
-            System.out.println("Alguém fechou a conexão.");
+            System.out.println("Conexão fechada (Linux).");
+        } catch (java.net.SocketException ex){
+            System.out.println("Conexão fechada (Windows).");
         }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {

@@ -24,7 +24,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
     
     public void iniciarRequest(){
         estado = EstadoTransacao.VOTE_REQUEST;
-        enviarParaTodos( Constantes.VOTE_REQUEST );
+        enviarParaTodosInicial( Constantes.VOTE_REQUEST );
     }
 
     @Override
@@ -59,11 +59,11 @@ public class ProcessadorMensagem implements ObservadorConexao{
                     System.out.println("Tudo mundo votou.");
                     if( sessao.getVotacao().resultadoVotacao() ){
                         estado = EstadoTransacao.GLOBAL_COMMIT;
-                        enviarParaTodos( Constantes.GLOBAL_COMMIT );
+                        enviarParaTodosFinal( Constantes.GLOBAL_COMMIT );
                         System.out.println("Resultado: " + Constantes.GLOBAL_COMMIT);
                     }else{
                         estado = EstadoTransacao.GLOBAL_ABORT;
-                        enviarParaTodos( Constantes.GLOBAL_ABORT );
+                        enviarParaTodosFinal( Constantes.GLOBAL_ABORT );
                         System.out.println("Resultado: " + Constantes.GLOBAL_ABORT);
                     }
                 }
@@ -73,10 +73,12 @@ public class ProcessadorMensagem implements ObservadorConexao{
             }else if( mensagem.equals( Constantes.GLOBAL_COMMIT ) ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT);
                 estado = EstadoTransacao.GLOBAL_COMMIT;
+                con.fecharConexao();
                 
             }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_ABORT);
-                estado = EstadoTransacao.GLOBAL_COMMIT;
+                estado = EstadoTransacao.GLOBAL_ABORT;
+                con.fecharConexao();
                 
             }
             
@@ -90,7 +92,9 @@ public class ProcessadorMensagem implements ObservadorConexao{
         try {
             if( estado == EstadoTransacao.INIT){
                 System.out.println("Voto de timeout: " + Constantes.VOTE_ABORT);
-                con.enviar( Constantes.VOTE_ABORT);
+                con.enviar( Constantes.VOTE_ABORT );
+            }else{
+                System.out.println("Deu ruim");
             }
             
             
@@ -101,11 +105,27 @@ public class ProcessadorMensagem implements ObservadorConexao{
         }
     }
     
-    private void enviarParaTodos(String mensagem){
+    private void enviarParaTodosInicial(String mensagem ){
         try {        
             for (int i = 0; i < listaConexoes.size(); i++) {
-                if( i != sessao.getIndiceFalhaVoteRequest() && i != sessao.getIndiceFalhaVoteGlobal() ){
+                if( i != sessao.getIndiceFalhaVoteRequest() ){
                     listaConexoes.get(i).enviar(mensagem);
+                }else{
+                    System.out.println("Não enviou");
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void enviarParaTodosFinal( String mensagem ){
+        try {        
+            for (int i = 0; i < listaConexoes.size(); i++) {
+                if( i != sessao.getIndiceFalhaVoteGlobal()){
+                    listaConexoes.get(i).enviar(mensagem);
+                }else{
+                    System.out.println("Não enviou");
                 }
             }
         } catch (IOException ex) {

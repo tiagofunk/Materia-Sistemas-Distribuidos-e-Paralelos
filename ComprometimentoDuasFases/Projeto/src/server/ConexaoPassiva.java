@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConexaoPassiva extends Conexao{
     
@@ -61,9 +63,18 @@ public class ConexaoPassiva extends Conexao{
                 }
             }
             
-        } catch (java.net.SocketTimeoutException ex) {
+        } catch (java.io.EOFException ex){
+            System.out.println("Conexão fechada (Linux).");
+        } catch (java.net.SocketException ex){
+            System.out.println("Conexão fechada (Windows).");
+        }catch (java.net.SocketTimeoutException ex) {
             for( ObservadorConexao obs : listaObservadores ){
                 obs.avisarTimeout( this );
+            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex1) {
+                ex.printStackTrace();
             }
         }catch (IOException ex) {
             ex.printStackTrace();
