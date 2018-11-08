@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +35,7 @@ public class ConexaoPassiva extends Conexao{
     
     @Override
     public void fecharConexao() throws IOException {
+        System.out.println("Fechando a conexão.");
         input.close();
         output.close();
         socket.close();
@@ -41,7 +43,7 @@ public class ConexaoPassiva extends Conexao{
 
     @Override
     public void run(){
-        String mensagem;
+        String mensagem = "";
         
         try {
             serverSocket = new ServerSocket( port );
@@ -52,9 +54,16 @@ public class ConexaoPassiva extends Conexao{
             input  = new ObjectInputStream( socket.getInputStream() );
             
             while( true ){
-                mensagem = input.readUTF();
-                
+                System.out.println("inicio while");
                 Thread.sleep(100);
+
+                try{
+                    mensagem = input.readUTF();
+                }catch (SocketTimeoutException ex ){
+                    for( ObservadorConexao obs : listaObservadores ){
+                        obs.avisarTimeout( this );
+                    }
+                }
                 
                 if( mensagem != null && !mensagem.isEmpty() ){
                     for( ObservadorConexao obs : listaObservadores ){
@@ -67,15 +76,6 @@ public class ConexaoPassiva extends Conexao{
             System.out.println("Conexão fechada (Linux).");
         } catch (java.net.SocketException ex){
             System.out.println("Conexão fechada (Windows).");
-        }catch (java.net.SocketTimeoutException ex) {
-            for( ObservadorConexao obs : listaObservadores ){
-                obs.avisarTimeout( this );
-            }
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex1) {
-                ex.printStackTrace();
-            }
         }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {

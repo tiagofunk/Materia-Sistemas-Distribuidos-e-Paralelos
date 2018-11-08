@@ -62,6 +62,7 @@ public class ConexaoAtiva extends Conexao{
             System.out.println("Conexão fechada (Linux).");
         } catch (java.net.SocketException ex){
             System.out.println("Conexão fechada (Windows).");
+            ex.printStackTrace();
         }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {

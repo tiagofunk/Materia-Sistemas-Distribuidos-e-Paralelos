@@ -3,6 +3,8 @@ package utils;
 import Principal.Constantes;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.EstadoTransacao;
 import model.Sessao;
 import model.TipoAgente;
@@ -69,7 +71,6 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 }
                 
                 
-                
             }else if( mensagem.equals( Constantes.GLOBAL_COMMIT ) ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT);
                 estado = EstadoTransacao.GLOBAL_COMMIT;
@@ -78,6 +79,11 @@ public class ProcessadorMensagem implements ObservadorConexao{
             }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_ABORT);
                 estado = EstadoTransacao.GLOBAL_ABORT;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
                 con.fecharConexao();
                 
             }
@@ -111,7 +117,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 if( i != sessao.getIndiceFalhaVoteRequest() ){
                     listaConexoes.get(i).enviar(mensagem);
                 }else{
-                    System.out.println("Não enviou");
+                    System.out.println("Não enviou no voto request");
                 }
             }
         } catch (IOException ex) {
@@ -125,7 +131,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 if( i != sessao.getIndiceFalhaVoteGlobal()){
                     listaConexoes.get(i).enviar(mensagem);
                 }else{
-                    System.out.println("Não enviou");
+                    System.out.println("Não enviou no resultado global");
                 }
             }
         } catch (IOException ex) {
