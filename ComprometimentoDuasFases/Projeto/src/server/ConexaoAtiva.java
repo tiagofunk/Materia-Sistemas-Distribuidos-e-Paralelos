@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class ConexaoAtiva extends Conexao{
     
@@ -43,13 +44,20 @@ public class ConexaoAtiva extends Conexao{
 
     @Override
     public void run(){
-        String mensagem;
+        String mensagem = "";
         
         try {
+            socket.setSoTimeout( super.timeout );
             while( true ){
-                mensagem = input.readUTF();
-                
                 Thread.sleep(100);
+                
+                try{
+                    mensagem = input.readUTF();
+                }catch(SocketTimeoutException ex ){
+                    for( ObservadorConexao obs : listaObservadores){
+                        obs.avisarTimeout(this);
+                    }
+                }
                 
                 if( mensagem != null && !mensagem.isEmpty() ){
                     for( ObservadorConexao obs : listaObservadores ){

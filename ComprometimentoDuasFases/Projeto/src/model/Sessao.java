@@ -14,6 +14,9 @@ public class Sessao {
     public Sessao(TipoAgente agente, Votacao votacao) {
         this.agente = agente;
         this.votacao = votacao;
+        indiceFalhaVoteGlobal = -1;
+        indiceFalhaVoteRequest = -1;
+        falhaVoteLocal = false;
     }
 
     public Sessao(TipoAgente agente, TipoResposta resposta) {
@@ -49,7 +52,7 @@ public class Sessao {
         this.indiceFalhaVoteGlobal = indiceFalhaVoteGlobal;
     }
 
-    public boolean isFalhaVoteLocal() {
+    public boolean getFalhaVoteLocal() {
         return falhaVoteLocal;
     }
 

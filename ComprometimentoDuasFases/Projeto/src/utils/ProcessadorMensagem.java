@@ -35,21 +35,32 @@ public class ProcessadorMensagem implements ObservadorConexao{
         
         try{
             
-            if (mensagem.equals(Constantes.VOTE_REQUEST)) {
+            if (mensagem.equals(Constantes.VOTE_REQUEST) 
+                && sessao.getAgente() == TipoAgente.PARTICIPANTE) {
+                
                 System.out.println("Coordenador disse: " + mensagem);
                 if (sessao.getResposta() == TipoResposta.POSITIVA) {
-                    System.out.println("Minha resposta: VOTE_COMMIT");
-                    estado = EstadoTransacao.VOTE_COMMIT;
-                    con.enviar(Constantes.VOTE_COMMIT);
+                    if( !sessao.getFalhaVoteLocal() ){
+                        System.out.println("Minha resposta: VOTE_COMMIT");
+                        estado = EstadoTransacao.VOTE_COMMIT;
+                        con.enviar(Constantes.VOTE_COMMIT);
+                    }else{
+                        System.out.println("Não respondi o vote request.");
+                    }
                 } else {
-                    System.out.println("Minha resposta: VOTE_ABORT");
-                    estado = EstadoTransacao.VOTE_ABORT;
-                    con.enviar(Constantes.VOTE_ABORT);
+                    if( !sessao.getFalhaVoteLocal() ){
+                        System.out.println("Minha resposta: VOTE_ABORT");
+                        estado = EstadoTransacao.VOTE_ABORT;
+                        con.enviar(Constantes.VOTE_ABORT);
+                    }else{
+                        System.out.println("Não respondi o vote request.");
+                    }
                 }
                 
                 
                 
-            }else if( mensagem.equals(Constantes.VOTE_COMMIT) || mensagem.equals(Constantes.VOTE_ABORT) 
+            }else if( (mensagem.equals(Constantes.VOTE_COMMIT) 
+                    || mensagem.equals(Constantes.VOTE_ABORT) )
                     && sessao.getAgente() == TipoAgente.COORDENADOR ){
                 System.out.println("Recebi: " + mensagem);
                 if( mensagem.equals( Constantes.VOTE_COMMIT ) ){
@@ -71,12 +82,14 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 }
                 
                 
-            }else if( mensagem.equals( Constantes.GLOBAL_COMMIT ) ){
+            }else if( mensagem.equals( Constantes.GLOBAL_COMMIT ) 
+                        && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT);
                 estado = EstadoTransacao.GLOBAL_COMMIT;
                 con.fecharConexao();
                 
-            }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) ){
+            }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) 
+                    && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_ABORT);
                 estado = EstadoTransacao.GLOBAL_ABORT;
                 try {
@@ -86,6 +99,8 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 }
                 con.fecharConexao();
                 
+            }else{
+                System.out.println("Mensagem invalida: " + mensagem);
             }
             
         }catch (IOException ex ){
@@ -96,11 +111,16 @@ public class ProcessadorMensagem implements ObservadorConexao{
     @Override
     public void avisarTimeout( Conexao con ) {
         try {
-            if( estado == EstadoTransacao.INIT){
+            if( estado == EstadoTransacao.INIT && sessao.getAgente() == TipoAgente.PARTICIPANTE){
                 System.out.println("Voto de timeout: " + Constantes.VOTE_ABORT);
+                estado = EstadoTransacao.VOTE_ABORT;
                 con.enviar( Constantes.VOTE_ABORT );
+            }else if(estado == EstadoTransacao.VOTE_REQUEST && sessao.getAgente() == TipoAgente.COORDENADOR) {
+                System.out.println("Nem todos responderam: " + Constantes.GLOBAL_ABORT );
+                estado = EstadoTransacao.GLOBAL_ABORT;
+                con.enviar( Constantes.GLOBAL_ABORT );
             }else{
-                System.out.println("Deu ruim");
+                System.out.println("Deu ruim mesmo avisarTimeout");
             }
             
             

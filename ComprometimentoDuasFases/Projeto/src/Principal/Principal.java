@@ -28,7 +28,7 @@ public class Principal {
         if( args[0].equals("c") ){
             coordenador( TIMEOUT, args[1] );
         }else if( args[0].equals("p") ){
-            participante( args[1], TIMEOUT );
+            participante( args[1], TIMEOUT, args[2] );
         }else{
             throw new RuntimeException("Argumento errado para tipo de agente: " + args[0] );
         }
@@ -72,7 +72,7 @@ public class Principal {
         }
     }
     
-    private static void participante( String opcaoVotacao, int timeout ){
+    private static void participante( String opcaoVotacao, int timeout, String tipoFalha ){
         TipoResposta tr;
         if( opcaoVotacao.equals("p") ){
             tr = TipoResposta.POSITIVA;
@@ -83,6 +83,24 @@ public class Principal {
         }
         
         Sessao s = new Sessao(TipoAgente.PARTICIPANTE, tr);
+        
+        switch(tipoFalha){
+            case "f0":
+                s.setIndiceFalhaVoteRequest( -1 );
+                s.setIndiceFalhaVoteGlobal( -1 );
+                s.setFalhaVoteLocal( false );
+                break;
+
+            case "f1":
+                s.setIndiceFalhaVoteRequest( -1 );
+                s.setIndiceFalhaVoteGlobal( -1 );
+                s.setFalhaVoteLocal( true );
+                break;
+
+                default:
+                    throw new IllegalArgumentException("Argumento para tipo de falha inválido: " + tipoFalha);
+        }
+        
         ProcessadorMensagem pm = new ProcessadorMensagem( s, null );
         ConexaoPassiva c;
         String conf = new LeitorConfiguracoes().lerConfiguracoesLocais();
