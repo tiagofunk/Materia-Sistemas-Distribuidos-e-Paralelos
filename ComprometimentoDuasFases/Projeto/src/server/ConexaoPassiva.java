@@ -52,10 +52,6 @@ public class ConexaoPassiva extends Conexao{
             input  = new ObjectInputStream( socket.getInputStream() );
             
             for (int i = 0; i < 2; i++) {
-                if( i == 1 ){
-                    socket.setSoTimeout( 2*timeout );
-                }
-                System.out.println("for");
                 try{
                     mensagem = input.readUTF();
                     if( mensagem != null && !mensagem.isEmpty() ){
@@ -70,7 +66,6 @@ public class ConexaoPassiva extends Conexao{
                 }
                 Thread.sleep(100);
             }
-            System.out.println("terminou");
             
         } catch (java.io.EOFException ex){
             System.out.println("Conexão fechada (Linux).");

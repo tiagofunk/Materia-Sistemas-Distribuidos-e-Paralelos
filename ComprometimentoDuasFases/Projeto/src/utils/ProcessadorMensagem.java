@@ -37,9 +37,10 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 && sessao.getAgente() == TipoAgente.PARTICIPANTE) {
                 
                 System.out.println("Coordenador disse: " + mensagem);
+                System.out.println("Pronto para operar arquivo da minha máquina?");
                 if (sessao.getResposta() == TipoResposta.POSITIVA) {
                     if( !sessao.getFalhaVoteLocal() ){
-                        System.out.println("Minha resposta: VOTE_COMMIT");
+                        System.out.println("Minha resposta: VOTE_COMMIT (Posso realizar transação).");
                         estado = EstadoTransacao.VOTE_COMMIT;
                         con.enviar(Constantes.VOTE_COMMIT);
                     }else{
@@ -47,11 +48,11 @@ public class ProcessadorMensagem implements ObservadorConexao{
                     }
                 } else {
                     if( !sessao.getFalhaVoteLocal() ){
-                        System.out.println("Minha resposta: VOTE_ABORT");
+                        System.out.println("Minha resposta: VOTE_ABORT (Não posso realizar transação).");
                         estado = EstadoTransacao.VOTE_ABORT;
                         con.enviar(Constantes.VOTE_ABORT);
                     }else{
-                        System.out.println("Não respondi o vote request.");
+                        System.out.println("Não respondi o vote request (Simulando um erro no participante).");
                     }
                 }
                 
@@ -67,28 +68,28 @@ public class ProcessadorMensagem implements ObservadorConexao{
                     sessao.getVotacao().votar( false );
                 }
                 if( sessao.getVotacao().tudoMundoVotou() ){
-                    System.out.println("Tudo mundo votou.");
+                    System.out.println("Tudo mundo respondeu.");
                     if( sessao.getVotacao().resultadoVotacao() ){
                         estado = EstadoTransacao.GLOBAL_COMMIT;
                         enviarParaTodosFinal( Constantes.GLOBAL_COMMIT );
-                        System.out.println("Resultado: " + Constantes.GLOBAL_COMMIT);
+                        System.out.println("Resultado: " + Constantes.GLOBAL_COMMIT + " (Todos irão alterar o arquivo na sua máquina).");
                     }else{
                         estado = EstadoTransacao.GLOBAL_ABORT;
                         enviarParaTodosFinal( Constantes.GLOBAL_ABORT );
-                        System.out.println("Resultado: " + Constantes.GLOBAL_ABORT);
+                        System.out.println("Resultado: " + Constantes.GLOBAL_ABORT + " (Arquivo não pode ser alterado).");
                     }
                 }
                 
                 
             }else if( mensagem.equals( Constantes.GLOBAL_COMMIT ) 
                         && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
-                System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT);
+                System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT + ", Então posso alterar o arquivo localmente.");
                 estado = EstadoTransacao.GLOBAL_COMMIT;
 //                con.fecharConexao();
                 
             }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) 
                     && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
-                System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_ABORT);
+                System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_ABORT + ", Então não posso alterar o arquivo localmente.");
                 estado = EstadoTransacao.GLOBAL_ABORT;
                 try {
                     Thread.sleep(1000);
@@ -110,11 +111,13 @@ public class ProcessadorMensagem implements ObservadorConexao{
     public void avisarTimeout( Conexao con ) {
         try {
             if( estado == EstadoTransacao.INIT && sessao.getAgente() == TipoAgente.PARTICIPANTE){
-                System.out.println("Voto de timeout: " + Constantes.VOTE_ABORT);
+                System.out.println("Voto de timeout: " + Constantes.VOTE_ABORT 
+                    + "(Parece que deu problema no coordenador).");
                 estado = EstadoTransacao.VOTE_ABORT;
                 con.enviar( Constantes.VOTE_ABORT );
             }else if(estado == EstadoTransacao.VOTE_REQUEST && sessao.getAgente() == TipoAgente.COORDENADOR) {
-                System.out.println("Nem todos responderam: " + Constantes.GLOBAL_ABORT );
+                System.out.println("Nem todos responderam: " + Constantes.GLOBAL_ABORT 
+                    + " (Algum participante deu erro).");
                 estado = EstadoTransacao.GLOBAL_ABORT;
                 enviarParaTodosFinal( Constantes.GLOBAL_ABORT );
             }else{
@@ -135,7 +138,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 if( i != sessao.getIndiceFalhaVoteRequest() ){
                     listaConexoes.get(i).enviar(mensagem);
                 }else{
-                    System.out.println("Não enviou no voto request");
+                    System.out.println("Não enviou no voto request (Simulando erro no coordenador).");
                 }
             }
         } catch (IOException ex) {
@@ -149,7 +152,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 if( i != sessao.getIndiceFalhaVoteGlobal()){
                     listaConexoes.get(i).enviar(mensagem);
                 }else{
-                    System.out.println("Não enviou no resultado global");
+                    System.out.println("Não enviou no resultado global (Simulando erro no coordenador).");
                 }
             }
         } catch (IOException ex) {

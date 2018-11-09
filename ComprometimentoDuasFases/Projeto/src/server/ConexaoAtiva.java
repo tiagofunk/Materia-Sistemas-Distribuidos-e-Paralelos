@@ -5,8 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConexaoAtiva extends Conexao{
     
@@ -49,7 +47,7 @@ public class ConexaoAtiva extends Conexao{
         String mensagem = "";
         
         try {
-            socket.setSoTimeout( super.timeout );
+            socket.setSoTimeout( 2*super.timeout );
             
             try{
                 mensagem = input.readUTF();
