@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConexaoAtiva extends Conexao{
     
@@ -48,23 +50,20 @@ public class ConexaoAtiva extends Conexao{
         
         try {
             socket.setSoTimeout( super.timeout );
-            while( true ){
-                Thread.sleep(100);
-                
-                try{
-                    mensagem = input.readUTF();
-                }catch(SocketTimeoutException ex ){
-                    for( ObservadorConexao obs : listaObservadores){
-                        obs.avisarTimeout(this);
-                    }
-                }
-                
+            
+            try{
+                mensagem = input.readUTF();
                 if( mensagem != null && !mensagem.isEmpty() ){
                     for( ObservadorConexao obs : listaObservadores ){
                         obs.encaminharMensagem( mensagem, this );
                     }
                 }
+            }catch (SocketTimeoutException ex ){
+                for( ObservadorConexao obs : listaObservadores ){
+                    obs.avisarTimeout( this );
+                }
             }
+            Thread.sleep( 3*1000 );
             
         } catch (java.io.EOFException ex){
             System.out.println("Conexão fechada (Linux).");

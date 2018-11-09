@@ -6,8 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ConexaoPassiva extends Conexao{
     
@@ -53,24 +51,26 @@ public class ConexaoPassiva extends Conexao{
             output = new ObjectOutputStream( socket.getOutputStream() );
             input  = new ObjectInputStream( socket.getInputStream() );
             
-            while( true ){
-                System.out.println("inicio while");
-                Thread.sleep(100);
-
+            for (int i = 0; i < 2; i++) {
+                if( i == 1 ){
+                    socket.setSoTimeout( 2*timeout );
+                }
+                System.out.println("for");
                 try{
                     mensagem = input.readUTF();
+                    if( mensagem != null && !mensagem.isEmpty() ){
+                        for( ObservadorConexao obs : listaObservadores ){
+                            obs.encaminharMensagem( mensagem, this );
+                        }
+                    }
                 }catch (SocketTimeoutException ex ){
                     for( ObservadorConexao obs : listaObservadores ){
                         obs.avisarTimeout( this );
                     }
                 }
-                
-                if( mensagem != null && !mensagem.isEmpty() ){
-                    for( ObservadorConexao obs : listaObservadores ){
-                        obs.encaminharMensagem( mensagem, this );
-                    }
-                }
+                Thread.sleep(100);
             }
+            System.out.println("terminou");
             
         } catch (java.io.EOFException ex){
             System.out.println("Conexão fechada (Linux).");

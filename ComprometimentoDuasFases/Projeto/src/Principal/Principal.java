@@ -15,7 +15,7 @@ import utils.LeitorConfiguracoes;
 
 public class Principal {
     
-    private static int TIMEOUT = 5000;
+    private static int TIMEOUT = 5*1000;
     
     public static void main(String[] args) {
         for (int i = 0; i < args.length; i++) {

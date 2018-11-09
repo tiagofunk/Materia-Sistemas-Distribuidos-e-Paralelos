@@ -3,8 +3,6 @@ package utils;
 import Principal.Constantes;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.EstadoTransacao;
 import model.Sessao;
 import model.TipoAgente;
@@ -86,7 +84,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                         && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
                 System.out.println("Coordenador deu veridito final: " + Constantes.GLOBAL_COMMIT);
                 estado = EstadoTransacao.GLOBAL_COMMIT;
-                con.fecharConexao();
+//                con.fecharConexao();
                 
             }else if( mensagem.equals( Constantes.GLOBAL_ABORT ) 
                     && sessao.getAgente() == TipoAgente.PARTICIPANTE ){
@@ -97,7 +95,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
-                con.fecharConexao();
+//                con.fecharConexao();
                 
             }else{
                 System.out.println("Mensagem invalida: " + mensagem);
@@ -118,7 +116,7 @@ public class ProcessadorMensagem implements ObservadorConexao{
             }else if(estado == EstadoTransacao.VOTE_REQUEST && sessao.getAgente() == TipoAgente.COORDENADOR) {
                 System.out.println("Nem todos responderam: " + Constantes.GLOBAL_ABORT );
                 estado = EstadoTransacao.GLOBAL_ABORT;
-                con.enviar( Constantes.GLOBAL_ABORT );
+                enviarParaTodosFinal( Constantes.GLOBAL_ABORT );
             }else{
                 System.out.println("Deu ruim mesmo avisarTimeout");
             }
