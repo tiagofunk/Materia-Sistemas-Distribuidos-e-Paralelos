@@ -1,0 +1,7 @@
+token:null
+senha:null
+nome:null
+telefone:null
+ipServidorRemoto:127.0.0.1
+portaServidorRemoto:56000
+portaServidor:56001
