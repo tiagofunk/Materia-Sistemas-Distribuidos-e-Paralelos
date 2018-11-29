@@ -1,13 +1,16 @@
 package view;
 
 import controller.Controller;
+import controller.ObservadorTelaNovoUsuario;
 
-public class TelaNovoUsuario extends javax.swing.JFrame {
+public class TelaNovoUsuario extends javax.swing.JFrame implements ObservadorTelaNovoUsuario {
     
-    Controller controle = new Controller();
+    Controller controle;
 
-    public TelaNovoUsuario() {
+    public TelaNovoUsuario( Controller controle ) {
         initComponents();
+        this.controle = controle;
+        this.controle.addObservadorTelaNovoUsuario(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -103,4 +106,9 @@ public class TelaNovoUsuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void sucesso() {
+        this.dispose();
+    }
 }

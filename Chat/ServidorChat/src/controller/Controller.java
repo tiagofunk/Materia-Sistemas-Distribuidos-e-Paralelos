@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persistence.DaoCliente;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
@@ -34,16 +36,21 @@ public class Controller {
             ex.printStackTrace();
         }
     }
-    public void criarNovoUsuario( String senha, String nome, String telefone, String ip, int porta) {
+    public void criarNovoUsuario( String senha, String nome, String telefone, String ip, String porta) {
         try {
             boolean achou = DaoCliente.pesquisarCliente(nome, telefone);
             if( !achou ){
                 String token = DaoCliente.gerarToken();
                 DaoCliente.salvarCliente(token, nome, telefone, senha);
+                Thread.sleep(2000);
+                System.out.println( ip + ":" + porta);
                 Conexao c = new Conexao(ip, porta);
                 c.enviar(Constantes.DEVOLVE_TOKEN+":"+token);
+                c.fecharConexao();
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }

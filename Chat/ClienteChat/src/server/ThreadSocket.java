@@ -39,7 +39,7 @@ public class ThreadSocket extends Thread{
             System.out.println("chegou: " + mensagem);
             
             for(ObservadorConexao obs: listaObs){
-                obs.encaminharMensagem(socket.getInetAddress().getHostAddress(), mensagem);
+                obs.encaminharMensagem(mensagem);
             }
         } catch (IOException ex) {
             for(ObservadorConexao obs: listaObs){

@@ -11,13 +11,14 @@ public class ProcessadorMensagens implements ObservadorConexao{
     }
 
     @Override
-    public void encaminharMensagem(String ip, int porta, String mensagem) {
+    public void encaminharMensagem(String mensagem) {
         String[] valores;
         String[] partes = mensagem.trim().split(":");
+        String[] destinatario = partes[0].split(";");
         
-        switch( partes[0] ){
+        switch( partes[1] ){
             case Constantes.CRIAR_USUARIO:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 3 ){
                     try {
                         throw new Exception(
@@ -28,7 +29,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
                     }
                 }else{
                     System.out.println("Vamos criar o usuário.");
-                    controle.criarNovoUsuario( valores[0], valores[1], valores[2], ip, porta );
+                    controle.criarNovoUsuario( valores[0], valores[1], valores[2], destinatario[0], destinatario[1] );
                 }
                 break;
                 

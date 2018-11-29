@@ -2,7 +2,7 @@ package server;
 
 public interface ObservadorConexao {
     
-    public void encaminharMensagem( String ip, String mensagem );
+    public void encaminharMensagem( String mensagem );
     
     public void avisarErroIOException();
 }

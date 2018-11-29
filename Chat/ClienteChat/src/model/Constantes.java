@@ -8,6 +8,7 @@ public class Constantes {
     public final static String TELEFONE = "telefone";
     public final static String IP_SERVIDOR_REMOTO = "ipServidorRemoto";
     public final static String PORTA_SERVIDOR_REMOTO = "portaServidorRemoto";
+    public final static String IP_SERVIDOR = "ipServidor";
     public final static String PORTA_SERVIDOR = "portaServidor";
     
     public final static String CRIAR_USUARIO = "criar_usuario";
