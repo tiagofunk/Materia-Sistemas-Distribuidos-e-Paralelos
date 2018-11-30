@@ -71,20 +71,16 @@ public class Controller {
     }
 
     public void salvarUsuario(String token) {
-        System.out.println("entrando");
         this.token = token;
         try {
             LeitorConfiguracoes.salvarUsuario(token, senha, nome, telefone);
-            System.out.println("salvou");
             for(ObservadorTelaNovoUsuario obs : listaObsTelaNovoUsuario){
                 obs.sucesso();
             }
-            System.out.println( listaObsTelaNovoUsuario.size() );
             for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
                 obs.aparecer();
                 obs.inserirDadosUsuario(token, nome, telefone);
             }
-            System.out.println( listaObsTelaPrincipal.size() );
         } catch (IOException ex) {
             ex.printStackTrace();
         }

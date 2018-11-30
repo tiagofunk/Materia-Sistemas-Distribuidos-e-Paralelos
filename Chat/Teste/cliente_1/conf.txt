@@ -1,6 +1,6 @@
-token:5
+token:1
 senha:senha
-nome:vivane
+nome:viviane
 telefone:123
 ipServidorRemoto:127.0.0.1
 portaServidorRemoto:56000

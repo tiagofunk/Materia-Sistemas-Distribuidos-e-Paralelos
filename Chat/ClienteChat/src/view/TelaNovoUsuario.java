@@ -92,7 +92,6 @@ public class TelaNovoUsuario extends javax.swing.JFrame implements ObservadorTel
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCriarActionPerformed
-        System.out.println("botao");
         controle.criarNovoUsuario(campoTextoSenha.getText(), campoTextoNome.getText(), campoTextoTelefone.getText());
     }//GEN-LAST:event_botaoCriarActionPerformed
 

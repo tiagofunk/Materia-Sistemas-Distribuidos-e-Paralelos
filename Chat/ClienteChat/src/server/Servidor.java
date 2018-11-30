@@ -27,7 +27,6 @@ public class Servidor extends Thread{
         
         while( true ){
             socket = server.accept();
-            System.out.println("Conectou " + socket.getInetAddress().getHostAddress() );
             ts = new ThreadSocket( socket );
             ts.adicionarObservador(listaObs);
             ts.start();
