@@ -103,7 +103,8 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         labelDadosUsuario.setText( s );
     }
     
-    public static void main(String[] args) {
+    
+     public static void main(String[] args) {
         Controller controle = new Controller();
         
         int porta = 0;
@@ -114,7 +115,8 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         }catch (IOException ex) {
             ex.printStackTrace();
         }
-        
+        Tela t = new Tela(controle);
+
         ProcessadorMensagens pm = new ProcessadorMensagens( controle );
         
         List<ObservadorConexao> listaObs = new ArrayList<>();
@@ -126,7 +128,6 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         String dadosUsuario[];
         try {
             dadosUsuario = LeitorConfiguracoes.lerDadosUsuario();
-            Tela t = new Tela(controle);
             controle.addObservadorTelaPrincipal(t);
             
             if( dadosUsuario[0].equals("null") ){
@@ -134,6 +135,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 controle.addObservadorTelaNovoUsuario(tnu);
                 tnu.setVisible(true);
             }else{
+                t.inserirDadosUsuario(dadosUsuario[0], dadosUsuario[2], dadosUsuario[3]);
                 t.setVisible(true);
             }
         } catch (IOException ex) {
@@ -142,6 +144,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         
     }
 
+   
     @Override
     public void aparecer() {
         this.setVisible(true);
