@@ -15,6 +15,9 @@ public class Controller {
     private static String nome;
     private static String telefone;
     
+    private static String ip;
+    private static String porta;
+    
     private List<ObservadorTelaNovoUsuario> listaObsTelaNovoUsuario = new ArrayList<>();
     private List<ObservadorTelaPrincipal> listaObsTelaPrincipal = new ArrayList<>();
     
@@ -39,6 +42,7 @@ public class Controller {
             Conexao conexao = new Conexao(dadosServidor[0], dadosServidor[1]);
             Thread.sleep(2000);
             conexao.enviar(meuIP +";"+ porta +":"+ Constantes.CRIAR_USUARIO+":"+senha+";"+nome+";"+telefone);
+            conexao.fecharConexao();
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex) {
@@ -46,8 +50,18 @@ public class Controller {
         }
     }
 
-    public void autenticarUsuario() {
-
+    public void autenticarUsuario(String token, String senha) {
+        String dadosServidor[];
+        try {
+            String meuIP = LeitorConfiguracoes.lerIpServidor();
+            int porta = LeitorConfiguracoes.lerPortaServidor();
+            dadosServidor = LeitorConfiguracoes.lerDadosServidorRemoto();
+            Conexao conexao = new Conexao(dadosServidor[0], dadosServidor[1]);
+            conexao.enviar(meuIP +";"+ porta +":"+ Constantes.AUTENTICAR_USUARIO+":"+token+";"+senha);
+            conexao.fecharConexao();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void adicionarContato() {
@@ -75,11 +89,27 @@ public class Controller {
         try {
             LeitorConfiguracoes.salvarUsuario(token, senha, nome, telefone);
             for(ObservadorTelaNovoUsuario obs : listaObsTelaNovoUsuario){
-                obs.sucesso();
+                obs.fechar();
             }
             for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
-                obs.aparecer();
                 obs.inserirDadosUsuario(token, nome, telefone);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        this.autenticarUsuario(token, senha);
+    }
+
+    void sucessoAutenticacao() {
+        for(ObservadorTelaNovoUsuario obs: listaObsTelaNovoUsuario){
+            obs.fechar();
+        }
+        try {
+            String[] dadosUsuario = LeitorConfiguracoes.lerDadosUsuario();
+            
+            for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
+                obs.inserirDadosUsuario(dadosUsuario[0], dadosUsuario[2], dadosUsuario[3]);
+                obs.aparecer();
             }
         } catch (IOException ex) {
             ex.printStackTrace();

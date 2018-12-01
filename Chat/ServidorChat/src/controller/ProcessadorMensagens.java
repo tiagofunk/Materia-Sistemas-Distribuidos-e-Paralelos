@@ -28,7 +28,6 @@ public class ProcessadorMensagens implements ObservadorConexao{
                         ex.printStackTrace();
                     }
                 }else{
-                    System.out.println("Vamos criar o usuário.");
                     controle.criarNovoUsuario( 
                         valores[0], valores[1], valores[2], 
                         destinatario[0], destinatario[1]
@@ -37,7 +36,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 break;
                 
             case Constantes.AUTENTICAR_USUARIO:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 2 ){
                     try {
                         throw new Exception(
@@ -48,14 +47,14 @@ public class ProcessadorMensagens implements ObservadorConexao{
                     }
                 }else{
                     controle.autenticarUsuario(
-                        valores[0], valores[1], destinatario[0],
-                        destinatario[1]
+                        valores[0], valores[1],
+                        destinatario[0], destinatario[1]
                     );
                 }
                 break;
                 
             case Constantes.ADICIONAR_USUARIO:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 3 ){
                     try {
                         throw new Exception(
@@ -70,7 +69,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 break;
                 
             case Constantes.INFORMAR_STATUS_CONEXAO:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 2 ){
                     try {
                         throw new Exception(
@@ -85,7 +84,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 break;
                 
             case Constantes.ALTERAR_DADOS:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 4 ){
                     try {
                         throw new Exception(
@@ -99,20 +98,8 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 }
                 break;
                 
-            case Constantes.CONFIRMAR_HASH:
-                valores = partes[1].split(";");
-                if( valores.length != 2 ){
-                    try {
-                        throw new Exception(
-                            "confirmar_hash não possue dois parâmetros: "
-                            + mensagem );
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }else{
-                    controle.confirmarHash( valores[0], valores[1] );
-                }
-                break;
+            default:
+                System.out.println("Tipo de mensagem inválida: " + mensagem);
         }
     }
 

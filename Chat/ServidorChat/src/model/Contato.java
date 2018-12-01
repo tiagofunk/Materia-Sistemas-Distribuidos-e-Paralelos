@@ -1,14 +1,19 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Contato {
     
     private String token;
     private String senha;
     private String nome;
     private String telefone;
+    private List<String> listaContatos = new ArrayList<>();
     
     private String ip;
     private String porta;
+    private long tempoUltimaConexao;
     private boolean online;
 
     public Contato() {
@@ -36,6 +41,14 @@ public class Contato {
         this.ip = ip;
         this.porta = porta;
         this.online = online;
+    }
+    
+    public void adicionarContato( String token ){
+        listaContatos.add( token );
+    }
+    
+    public void removerContato( String token ){
+        listaContatos.remove( token );
     }
 
     public String getToken() {
@@ -92,6 +105,19 @@ public class Contato {
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public long getTempoUltimaConexao() {
+        return tempoUltimaConexao;
+    }
+
+    public void setTempoUltimaConexao(long tempoUltimaConexao) {
+        this.tempoUltimaConexao = tempoUltimaConexao;
+    }
+
+    @Override
+    public String toString() {
+        return "Contato{" + "token=" + token + ", senha=" + senha + ", nome=" + nome + ", telefone=" + telefone + ", listaContatos=" + listaContatos + ", ip=" + ip + ", porta=" + porta + ", tempoUltimaConexao=" + tempoUltimaConexao + ", online=" + online + '}';
     }
     
 }

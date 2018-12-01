@@ -4,9 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Contato;
+import model.Sessao;
 import persistence.DaoCliente;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
@@ -14,6 +13,8 @@ import server.ObservadorConexao;
 import server.Servidor;
 
 public class Controller {
+    
+    private Sessao sessao = new Sessao();;
 
     public static void main(String[] args) {
         int porta = 0;
@@ -42,7 +43,7 @@ public class Controller {
             boolean achou = DaoCliente.pesquisarCliente(nome, telefone);
             if( !achou ){
                 String token = DaoCliente.gerarToken();
-                DaoCliente.salvarCliente( new Contato( token, nome, telefone, senha ) );
+                DaoCliente.salvarCliente( new Contato( token, senha, nome, telefone ) );
                 Thread.sleep(2000);
                 Conexao c = new Conexao(ip, porta);
                 c.enviar(Constantes.DEVOLVE_TOKEN+":"+token);
@@ -57,13 +58,15 @@ public class Controller {
 
     public void autenticarUsuario( String token, String senha, String ip, String porta ) {
         try {
-            Contato c = DaoCliente.buscarContato( token );
-            if( c != null && c.getSenha().equals( senha ) ){
-                Conexao con = new Conexao(ip, porta);
-                con.enviar(Constantes.CONFIRMAR_HASH+":"+token);
-                con.fecharConexao();
-            }else{
+            Contato contato = DaoCliente.buscarContato( token );
+            if( contato != null && contato.getSenha().equals( senha ) ){
+                contato.setIp(ip);
+                contato.setPorta(porta);
+                sessao.adicionarContato( contato );
                 
+                Conexao conexao = new Conexao(ip, porta);
+                conexao.enviar( Constantes.CONFIRMAR_AUTENTICACAO );
+                conexao.fecharConexao();
             }
         } catch (IOException ex) {
             ex.printStackTrace();

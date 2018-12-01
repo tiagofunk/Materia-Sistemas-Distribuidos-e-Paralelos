@@ -20,6 +20,9 @@ public class ProcessadorMensagens implements ObservadorConexao{
             case Constantes.DEVOLVE_TOKEN:
                 controle.salvarUsuario(partes[1]);
                 break;
+            case Constantes.CONFIRMAR_AUTENTICACAO:
+                controle.sucessoAutenticacao();
+                break;
         }
     }
 

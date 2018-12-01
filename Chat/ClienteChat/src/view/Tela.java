@@ -135,8 +135,9 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 controle.addObservadorTelaNovoUsuario(tnu);
                 tnu.setVisible(true);
             }else{
-                t.inserirDadosUsuario(dadosUsuario[0], dadosUsuario[2], dadosUsuario[3]);
-                t.setVisible(true);
+                controle.autenticarUsuario(dadosUsuario[0], dadosUsuario[1]);
+//                t.inserirDadosUsuario(dadosUsuario[0], dadosUsuario[2], dadosUsuario[3]);
+//                t.setVisible(true);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
