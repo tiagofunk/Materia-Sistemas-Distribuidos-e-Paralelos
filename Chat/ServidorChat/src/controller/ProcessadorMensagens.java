@@ -29,7 +29,10 @@ public class ProcessadorMensagens implements ObservadorConexao{
                     }
                 }else{
                     System.out.println("Vamos criar o usuário.");
-                    controle.criarNovoUsuario( valores[0], valores[1], valores[2], destinatario[0], destinatario[1] );
+                    controle.criarNovoUsuario( 
+                        valores[0], valores[1], valores[2], 
+                        destinatario[0], destinatario[1]
+                    );
                 }
                 break;
                 
@@ -44,7 +47,10 @@ public class ProcessadorMensagens implements ObservadorConexao{
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.autenticarUsuario( valores[0], valores[1] );
+                    controle.autenticarUsuario(
+                        valores[0], valores[1], destinatario[0],
+                        destinatario[1]
+                    );
                 }
                 break;
                 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Contato;
 import persistence.DaoCliente;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
@@ -41,9 +42,8 @@ public class Controller {
             boolean achou = DaoCliente.pesquisarCliente(nome, telefone);
             if( !achou ){
                 String token = DaoCliente.gerarToken();
-                DaoCliente.salvarCliente(token, nome, telefone, senha);
+                DaoCliente.salvarCliente( new Contato( token, nome, telefone, senha ) );
                 Thread.sleep(2000);
-                System.out.println( ip + ":" + porta);
                 Conexao c = new Conexao(ip, porta);
                 c.enviar(Constantes.DEVOLVE_TOKEN+":"+token);
                 c.fecharConexao();
@@ -55,8 +55,19 @@ public class Controller {
         }
     }
 
-    public void autenticarUsuario( String token, String senha ) {
-        
+    public void autenticarUsuario( String token, String senha, String ip, String porta ) {
+        try {
+            Contato c = DaoCliente.buscarContato( token );
+            if( c != null && c.getSenha().equals( senha ) ){
+                Conexao con = new Conexao(ip, porta);
+                con.enviar(Constantes.CONFIRMAR_HASH+":"+token);
+                con.fecharConexao();
+            }else{
+                
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void adicionarContato(String token, String senha, String tokenNovoUsuario) {
