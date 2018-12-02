@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Constantes;
+import model.MantenedorConexao;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 
@@ -51,6 +52,7 @@ public class Controller {
     }
 
     public void autenticarUsuario(String token, String senha) {
+        this.token = token;
         String dadosServidor[];
         try {
             String meuIP = LeitorConfiguracoes.lerIpServidor();
@@ -59,6 +61,8 @@ public class Controller {
             Conexao conexao = new Conexao(dadosServidor[0], dadosServidor[1]);
             conexao.enviar(meuIP +";"+ porta +":"+ Constantes.AUTENTICAR_USUARIO+":"+token+";"+senha);
             conexao.fecharConexao();
+            
+            this.iniciarMantenedoraConexao();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -114,6 +118,11 @@ public class Controller {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void iniciarMantenedoraConexao() throws IOException {
+        MantenedorConexao mc = new MantenedorConexao( token );
+        mc.start();
     }
 
 }

@@ -104,7 +104,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
     }
     
     
-     public static void main(String[] args) {
+    public static void main(String[] args) {
         Controller controle = new Controller();
         
         int porta = 0;
@@ -136,8 +136,6 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 tnu.setVisible(true);
             }else{
                 controle.autenticarUsuario(dadosUsuario[0], dadosUsuario[1]);
-//                t.inserirDadosUsuario(dadosUsuario[0], dadosUsuario[2], dadosUsuario[3]);
-//                t.setVisible(true);
             }
         } catch (IOException ex) {
             ex.printStackTrace();

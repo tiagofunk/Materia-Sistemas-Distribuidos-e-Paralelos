@@ -11,4 +11,6 @@ public class Constantes {
     public final static String ADICIONAR_USUARIO = "adicionar_contato";
     public final static String INFORMAR_STATUS_CONEXAO = "informar_status_conexao";
     public final static String ALTERAR_DADOS = "alterar_dados";
+    
+    public final static long TEMPO_ESPERA = 5000;
 }

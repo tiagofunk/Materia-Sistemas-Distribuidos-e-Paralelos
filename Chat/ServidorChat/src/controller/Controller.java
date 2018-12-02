@@ -6,17 +6,22 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Contato;
 import model.Sessao;
+import model.VerificadorConexoes;
 import persistence.DaoCliente;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 import server.ObservadorConexao;
 import server.Servidor;
+import view.Tela;
 
 public class Controller {
     
-    private Sessao sessao = new Sessao();;
+    private Sessao sessao = new Sessao();
 
     public static void main(String[] args) {
+        Tela t = new Tela();
+        t.setVisible(true);
+
         int porta = 0;
         try {
             porta = LeitorConfiguracoes.lerPortaServidor();
@@ -26,7 +31,13 @@ public class Controller {
             ex.printStackTrace();
         }
         
-        ProcessadorMensagens pm = new ProcessadorMensagens( new Controller() );
+        Controller controle = new Controller();
+        
+        VerificadorConexoes vc = new VerificadorConexoes( controle.getSessao() );
+        vc.adicionarObservador( t );
+        vc.start();
+        
+        ProcessadorMensagens pm = new ProcessadorMensagens( controle );
         
         List<ObservadorConexao> listaObs = new ArrayList<>();
         listaObs.add( pm );
@@ -38,6 +49,7 @@ public class Controller {
             ex.printStackTrace();
         }
     }
+    
     public void criarNovoUsuario( String senha, String nome, String telefone, String ip, String porta) {
         try {
             boolean achou = DaoCliente.pesquisarCliente(nome, telefone);
@@ -81,11 +93,15 @@ public class Controller {
 
     }
 
-    public void informarStatusContatos(String token, String senha) {
-
+    public void informarStatusContatos(String token) {
+        sessao.atualizarContato( token );
     }
 
     public void alterarDados(String token, String senha, String nome, String telefone) {
 
+    }
+
+    public Sessao getSessao() {
+        return sessao;
     }
 }

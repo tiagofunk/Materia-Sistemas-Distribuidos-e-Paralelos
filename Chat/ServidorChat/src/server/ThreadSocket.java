@@ -41,6 +41,7 @@ public class ThreadSocket extends Thread{
             for(ObservadorConexao obs: listaObs){
                 obs.encaminharMensagem(mensagem);
             }
+            socket.close();
         } catch (IOException ex) {
             for(ObservadorConexao obs: listaObs){
                 obs.avisarErroIOException();

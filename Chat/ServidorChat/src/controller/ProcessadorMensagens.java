@@ -70,16 +70,16 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 
             case Constantes.INFORMAR_STATUS_CONEXAO:
                 valores = partes[2].split(";");
-                if( valores.length != 2 ){
+                if( valores.length != 1 ){
                     try {
                         throw new Exception(
-                            "informar_status_conexao não possue dois parâmetros: "
+                            "informar_status_conexao não possue um parâmetro: "
                             + mensagem );
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.informarStatusContatos( valores[0], valores[1] );
+                    controle.informarStatusContatos( valores[0] );
                 }
                 break;
                 

@@ -19,4 +19,6 @@ public class Constantes {
     public final static String ALTERAR_DADOS = "alterar_dados";
     public final static String CONFIRMAR_AUTENTICACAO = "confirmar_autenticacao";
     
+    public final static long TEMPO_ESPERA = 2000;
+    
 }
