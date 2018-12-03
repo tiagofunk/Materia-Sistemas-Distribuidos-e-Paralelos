@@ -6,14 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import model.Contato;
 
 public class DaoCliente {
     
     private static final String DAO = "cliente.txt";
 
-    public static void salvarCliente(String token, String nome, String telefone, String senha) throws IOException {
+    public static void salvarCliente(Contato c) throws IOException {
         BufferedWriter bw = new BufferedWriter( new FileWriter(DAO, true) );
-        bw.write(token+";"+senha+";"+nome+";"+telefone);
+        bw.write(c.getToken()+";"+c.getSenha()+";"+c.getNome()+";"+c.getTelefone());
         bw.newLine();
         bw.close();
     }
@@ -31,6 +32,24 @@ public class DaoCliente {
         }
         return false;
     }
+    
+    public static Contato buscarContato(String token) throws FileNotFoundException, IOException{
+        String linha;
+        String[] valores = null;
+        Contato c = null;
+        BufferedReader br = new BufferedReader( new FileReader( DAO ) );
+        
+        while( ( linha = br.readLine() ) != null ){
+            valores = linha.split(";");
+            if( token.equals( valores[0] ) ){
+                c = new Contato(valores[0], valores[1], valores[2], valores[3] );
+                break;
+            }
+        }
+        br.close();
+        
+        return c;
+    }
 
     public static void atualizarCliente(String token, String nome, String telefone, String senha) {
 
@@ -44,6 +63,7 @@ public class DaoCliente {
         while( (linha = br.readLine() ) != null ){
             valores = linha.split(";");
         }
+        br.close();
         
         if( linha == null && valores == null){
             return "1";

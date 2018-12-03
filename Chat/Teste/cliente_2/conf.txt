@@ -1,0 +1,8 @@
+token:5
+senha:minhasenha
+nome:tiago
+telefone:456
+ipServidorRemoto:127.0.0.1
+portaServidorRemoto:56000
+ipServidor:127.0.0.1
+portaServidor:56002

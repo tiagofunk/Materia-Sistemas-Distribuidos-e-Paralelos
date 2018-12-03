@@ -36,6 +36,9 @@ public class ThreadSocket extends Thread{
             input = new ObjectInputStream( socket.getInputStream() );
             
             mensagem = input.readUTF();
+            if( !mensagem.contains( "informar_status_conexao" ) ){
+                System.out.println("Recebi: " + mensagem);
+            }
             
             for(ObservadorConexao obs: listaObs){
                 obs.encaminharMensagem(mensagem);

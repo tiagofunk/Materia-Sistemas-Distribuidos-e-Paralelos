@@ -4,17 +4,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import model.Contato;
+import model.Sessao;
+import model.VerificadorConexoes;
 import persistence.DaoCliente;
+import persistence.DaoContato;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 import server.ObservadorConexao;
 import server.Servidor;
+import view.Tela;
 
 public class Controller {
+    
+    private Sessao sessao = new Sessao();
 
     public static void main(String[] args) {
+        Tela t = new Tela();
+        t.setVisible(true);
+
         int porta = 0;
         try {
             porta = LeitorConfiguracoes.lerPortaServidor();
@@ -24,7 +32,13 @@ public class Controller {
             ex.printStackTrace();
         }
         
-        ProcessadorMensagens pm = new ProcessadorMensagens( new Controller() );
+        Controller controle = new Controller();
+        
+        VerificadorConexoes vc = new VerificadorConexoes( controle.getSessao() );
+        vc.adicionarObservador( t );
+        vc.start();
+        
+        ProcessadorMensagens pm = new ProcessadorMensagens( controle );
         
         List<ObservadorConexao> listaObs = new ArrayList<>();
         listaObs.add( pm );
@@ -36,14 +50,14 @@ public class Controller {
             ex.printStackTrace();
         }
     }
+    
     public void criarNovoUsuario( String senha, String nome, String telefone, String ip, String porta) {
         try {
             boolean achou = DaoCliente.pesquisarCliente(nome, telefone);
             if( !achou ){
                 String token = DaoCliente.gerarToken();
-                DaoCliente.salvarCliente(token, nome, telefone, senha);
+                DaoCliente.salvarCliente( new Contato( token, senha, nome, telefone ) );
                 Thread.sleep(2000);
-                System.out.println( ip + ":" + porta);
                 Conexao c = new Conexao(ip, porta);
                 c.enviar(Constantes.DEVOLVE_TOKEN+":"+token);
                 c.fecharConexao();
@@ -55,23 +69,57 @@ public class Controller {
         }
     }
 
-    public void autenticarUsuario( String token, String senha ) {
-        
+    public void autenticarUsuario( String token, String senha, String ip, String porta ) {
+        try {
+            Contato contato = DaoCliente.buscarContato( token );
+            if( contato != null && contato.getSenha().equals( senha ) ){
+                contato.setIp(ip);
+                contato.setPorta(porta);
+                sessao.adicionarContato( contato );
+                
+                Conexao conexao = new Conexao(ip, porta);
+                conexao.enviar( Constantes.CONFIRMAR_AUTENTICACAO );
+                conexao.fecharConexao();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public void adicionarContato(String token, String senha, String tokenNovoUsuario) {
-
+    public void adicionarContato(String token, String tokenNovoUsuario, String ip, String porta) {
+        try {
+            if( DaoContato.buscarContato(token, tokenNovoUsuario) ){
+                // Se ele achou não faz nada.
+            }else{
+                DaoContato.adicionarContato(token, tokenNovoUsuario);
+                
+                Conexao conexao = new Conexao(ip, porta);
+                conexao.enviar(Constantes.ADICIONAR_CONTATO+":"+tokenNovoUsuario);
+                conexao.fecharConexao();
+                
+                conexao = new Conexao(sessao.getIp(tokenNovoUsuario),
+                    sessao.getPorta(tokenNovoUsuario));
+                conexao.enviar(Constantes.ADICIONAR_CONTATO+":"+token);
+                conexao.fecharConexao();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void confirmarHash(String token, String hash) {
 
     }
 
-    public void informarStatusContatos(String token, String senha) {
-
+    public void informarStatusContatos(String token) {
+        sessao.atualizarContato( token );
     }
 
     public void alterarDados(String token, String senha, String nome, String telefone) {
 
+    }
+
+    public Sessao getSessao() {
+        return sessao;
     }
 }

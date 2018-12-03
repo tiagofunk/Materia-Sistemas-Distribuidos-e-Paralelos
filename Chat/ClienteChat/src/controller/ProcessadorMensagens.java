@@ -20,12 +20,21 @@ public class ProcessadorMensagens implements ObservadorConexao{
             case Constantes.DEVOLVE_TOKEN:
                 controle.salvarUsuario(partes[1]);
                 break;
+            case Constantes.CONFIRMAR_AUTENTICACAO:
+                controle.sucessoAutenticacao();
+                break;
+            case Constantes.ADICIONAR_CONTATO:
+                controle.salvarContato(partes[1]);
+                break;
+                
+            default:
+                System.out.println("Tipo de mensagem inválida: " + mensagem);
         }
     }
 
     @Override
     public void avisarErroIOException() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Conexão fechada inesperadamente.");
     }
 
 	

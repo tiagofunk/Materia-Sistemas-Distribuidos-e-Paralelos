@@ -1,0 +1,8 @@
+token:6
+senha:outrasenha
+nome:fernando
+telefone:678
+ipServidorRemoto:127.0.0.1
+portaServidorRemoto:56000
+ipServidor:127.0.0.1
+portaServidor:56003

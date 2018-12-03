@@ -27,6 +27,9 @@ public class Conexao{
     public void enviar( String mensagem ) throws IOException{
         output.writeUTF( mensagem );
         output.flush();
+        if( !mensagem.contains( "informar_status_conexao" ) ){
+            System.out.println("Enviou: " + mensagem);
+        }
     }
     
     public void fecharConexao() throws IOException {

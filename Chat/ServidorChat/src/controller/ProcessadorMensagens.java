@@ -28,13 +28,15 @@ public class ProcessadorMensagens implements ObservadorConexao{
                         ex.printStackTrace();
                     }
                 }else{
-                    System.out.println("Vamos criar o usuário.");
-                    controle.criarNovoUsuario( valores[0], valores[1], valores[2], destinatario[0], destinatario[1] );
+                    controle.criarNovoUsuario( 
+                        valores[0], valores[1], valores[2], 
+                        destinatario[0], destinatario[1]
+                    );
                 }
                 break;
                 
             case Constantes.AUTENTICAR_USUARIO:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 2 ){
                     try {
                         throw new Exception(
@@ -44,42 +46,47 @@ public class ProcessadorMensagens implements ObservadorConexao{
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.autenticarUsuario( valores[0], valores[1] );
+                    controle.autenticarUsuario(
+                        valores[0], valores[1],
+                        destinatario[0], destinatario[1]
+                    );
                 }
                 break;
                 
-            case Constantes.ADICIONAR_USUARIO:
-                valores = partes[1].split(";");
-                if( valores.length != 3 ){
+            case Constantes.ADICIONAR_CONTATO:
+                valores = partes[2].split(";");
+                if( valores.length != 2 ){
                     try {
                         throw new Exception(
-                            "adicionar_contato não possue três parâmetros: "
+                            "adicionar_contato não possue dois parâmetros: "
                             + mensagem );
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.adicionarContato( valores[0], valores[1], valores[2] );
+                    controle.adicionarContato(
+                        valores[0], valores[1],
+                        destinatario[0], destinatario[1] );
                 }
                 break;
                 
             case Constantes.INFORMAR_STATUS_CONEXAO:
-                valores = partes[1].split(";");
-                if( valores.length != 2 ){
+                valores = partes[2].split(";");
+                if( valores.length != 1 ){
                     try {
                         throw new Exception(
-                            "informar_status_conexao não possue dois parâmetros: "
+                            "informar_status_conexao não possue um parâmetro: "
                             + mensagem );
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.informarStatusContatos( valores[0], valores[1] );
+                    controle.informarStatusContatos( valores[0] );
                 }
                 break;
                 
             case Constantes.ALTERAR_DADOS:
-                valores = partes[1].split(";");
+                valores = partes[2].split(";");
                 if( valores.length != 4 ){
                     try {
                         throw new Exception(
@@ -93,26 +100,14 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 }
                 break;
                 
-            case Constantes.CONFIRMAR_HASH:
-                valores = partes[1].split(";");
-                if( valores.length != 2 ){
-                    try {
-                        throw new Exception(
-                            "confirmar_hash não possue dois parâmetros: "
-                            + mensagem );
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }else{
-                    controle.confirmarHash( valores[0], valores[1] );
-                }
-                break;
+            default:
+                System.out.println("Tipo de mensagem inválida: " + mensagem);
         }
     }
 
     @Override
     public void avisarErroIOException() {
-        throw new UnsupportedOperationException("avisarErroIOException");
+        System.out.println("Conexão fechada inesperadamente.");
     }
 
 }

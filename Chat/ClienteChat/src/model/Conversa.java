@@ -4,31 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Conversa {
-	
-	private Cliente cliente;
-	private Contato contato;
-	private List<Mensagem> listaMensagens = new ArrayList<>();
-	
-	public void adicionarMensagem(Mensagem m) {
-		listaMensagens.add(m);
-	}
 
-	public Cliente getCliente() {
-		return cliente;
-	}
+    private Contato contato;
+    private List<Mensagem> listaMensagens = new ArrayList<>();
 
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
+    public Conversa(Contato contato) {
+        this.contato = contato;
+    }
 
-	public Contato getContato() {
-		return contato;
-	}
+    public void adicionarMensagem(Mensagem m) {
+        listaMensagens.add(m);
+    }
 
-	public void setContato(Contato contato) {
-		this.contato = contato;
-	}
-	
-	
+    public Contato getContato() {
+        return contato;
+    }
 
 }
