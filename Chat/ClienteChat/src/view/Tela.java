@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.Conversa;
 import persistence.LeitorConfiguracoes;
 import server.ObservadorConexao;
 import server.Servidor;
@@ -15,10 +17,14 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
     
     private Controller controle;
     
+    private DefaultTableModel modeloTabela;
+    
     public Tela(Controller controle) {
         initComponents();
         this.controle = controle;
-        controle.addObservadorTelaPrincipal(this);
+        
+        modeloTabela = new DefaultTableModel(new Object[]{"Contato","Status"}, 0);
+        tabelaContatos.setModel(modeloTabela);
     }
 
     @SuppressWarnings("unchecked")
@@ -43,7 +49,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
 
             },
             new String [] {
-                "Contatos"
+                "Contatos", "Status"
             }
         ));
         jScrollPane1.setViewportView(tabelaContatos);
@@ -178,6 +184,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
             }else{
                 controle.autenticarUsuario(dadosUsuario[0], dadosUsuario[1]);
             }
+            controle.carregarConversas();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -188,5 +195,24 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
     @Override
     public void aparecer() {
         this.setVisible(true);
+    }
+
+    @Override
+    public void atualizarConversas( List<Conversa> listaConversas ) {
+        System.out.println("Inserindo as conversas");
+        modeloTabela.setNumRows( 0 );
+        for(Conversa c: listaConversas){
+            modeloTabela.addRow(
+                new Object[]{ 
+                    c.getContato().getToken(),
+                    c.getContato().isStatus()
+                }
+            );
+        }
+    }
+
+    @Override
+    public void adicionarMensagen(String token, String mensagem) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

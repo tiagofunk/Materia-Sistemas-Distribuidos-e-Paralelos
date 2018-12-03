@@ -3,21 +3,25 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Constantes;
+import model.Contato;
+import model.Conversa;
 import model.MantenedorConexao;
+import persistence.DaoContato;
+import persistence.DaoConversa;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 
 public class Controller {
     
     private static String token;
-    private static String hash;
     private static String senha;
     private static String nome;
     private static String telefone;
     
-    private static String ip;
-    private static String porta;
+    private List<Conversa> listaConversas = new ArrayList<>();
     
     private List<ObservadorTelaNovoUsuario> listaObsTelaNovoUsuario = new ArrayList<>();
     private List<ObservadorTelaPrincipal> listaObsTelaPrincipal = new ArrayList<>();
@@ -28,6 +32,21 @@ public class Controller {
     
     public void addObservadorTelaPrincipal(ObservadorTelaPrincipal obs){
         listaObsTelaPrincipal.add(obs);
+    }
+
+    public Controller() {
+    }
+    
+    public void carregarConversas(){
+        System.out.println("carregando as conversas");
+        try {
+            listaConversas = DaoConversa.lerConversas();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
+            obs.atualizarConversas(listaConversas);
+        }
     }
 
     public void criarNovoUsuario(String senha, String nome, String telefone) {
@@ -132,6 +151,23 @@ public class Controller {
     public void iniciarMantenedoraConexao() throws IOException {
         MantenedorConexao mc = new MantenedorConexao( token );
         mc.start();
+    }
+
+    void salvarContato(String token) {
+        try {
+            DaoContato.salvarContao(token);
+            
+            Contato contato = new Contato( token, false);
+            
+            Conversa conversa = new Conversa(contato);
+            listaConversas.add( conversa );
+            
+            for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
+                obs.atualizarConversas( listaConversas );
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

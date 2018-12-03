@@ -6,4 +6,8 @@ cp "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/ClienteChat/dist/
 
 cp "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/ClienteChat/dist/ClienteChat.jar" "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/Teste/cliente_2/"
 
+cp "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/ClienteChat/dist/ClienteChat.jar" "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/Teste/cliente_3/"
+
+cp "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/ClienteChat/dist/ClienteChat.jar" "/home/tiago/Repositorios/Github/DistribuidosParalelos/Chat/Teste/cliente_4/"
+
 

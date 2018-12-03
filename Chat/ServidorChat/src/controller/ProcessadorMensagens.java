@@ -16,7 +16,6 @@ public class ProcessadorMensagens implements ObservadorConexao{
         String[] partes = mensagem.trim().split(":");
         String[] destinatario = partes[0].split(";");
         
-        System.out.println(partes[1]);
         switch( partes[1] ){
             case Constantes.CRIAR_USUARIO:
                 valores = partes[2].split(";");
@@ -108,7 +107,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
 
     @Override
     public void avisarErroIOException() {
-        throw new UnsupportedOperationException("avisarErroIOException");
+        System.out.println("Conexão fechada inesperadamente.");
     }
 
 }

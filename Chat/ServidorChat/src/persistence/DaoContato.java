@@ -12,7 +12,7 @@ public class DaoContato {
     private final static String DAO = "contato.txt";
     
     public static void adicionarContato(String token1, String token2) throws IOException{
-        BufferedWriter bw = new BufferedWriter( new FileWriter( DAO ) );
+        BufferedWriter bw = new BufferedWriter( new FileWriter( DAO, true) );
         bw.write( token1+";"+token2 );
         bw.newLine();
         bw.write( token2+";"+token1 );
@@ -26,7 +26,7 @@ public class DaoContato {
         
         while( (linha = br.readLine() ) != null ){
             valores = linha.split(";");
-            if( valores[1].equals( token1 ) && valores[2].equals( token2 ) ){
+            if( valores[0].equals( token1 ) && valores[1].equals( token2 ) ){
                 return true;
             }
         }
