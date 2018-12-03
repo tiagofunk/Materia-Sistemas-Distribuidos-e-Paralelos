@@ -8,6 +8,7 @@ import model.Contato;
 import model.Sessao;
 import model.VerificadorConexoes;
 import persistence.DaoCliente;
+import persistence.DaoContato;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 import server.ObservadorConexao;
@@ -85,8 +86,25 @@ public class Controller {
         }
     }
 
-    public void adicionarContato(String token, String senha, String tokenNovoUsuario) {
-
+    public void adicionarContato(String token, String tokenNovoUsuario, String ip, String porta) {
+        try {
+            if( DaoContato.buscarContato(token, tokenNovoUsuario) ){
+                // Se ele achou não faz nada.
+            }else{
+                DaoContato.adicionarContato(token, tokenNovoUsuario);
+                
+                Conexao conexao = new Conexao(ip, porta);
+                conexao.enviar(Constantes.ADICIONAR_CONTATO+":"+tokenNovoUsuario);
+                conexao.fecharConexao();
+                
+                conexao = new Conexao(sessao.getIp(tokenNovoUsuario),
+                    sessao.getPorta(tokenNovoUsuario));
+                conexao.enviar(Constantes.ADICIONAR_CONTATO+":"+token);
+                conexao.fecharConexao();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void confirmarHash(String token, String hash) {

@@ -68,8 +68,17 @@ public class Controller {
         }
     }
 
-    public void adicionarContato() {
-
+    public void adicionarContato( String tokenAdicionado ) {
+        try {
+            String meuIP = LeitorConfiguracoes.lerIpServidor();
+            int porta = LeitorConfiguracoes.lerPortaServidor();
+            String[] dadosServidor = LeitorConfiguracoes.lerDadosServidorRemoto();
+            Conexao conexao = new Conexao(dadosServidor[0], dadosServidor[1]);
+            conexao.enviar(meuIP+";"+porta+":"+Constantes.ADICIONAR_CONTATO+":"+token+";"+tokenAdicionado);
+            conexao.fecharConexao();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void conectarContato() {

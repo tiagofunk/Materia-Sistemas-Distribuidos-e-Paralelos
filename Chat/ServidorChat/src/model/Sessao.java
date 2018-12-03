@@ -68,4 +68,22 @@ public class Sessao {
         }
         return s+"\n\n\n";
     }
+    
+    public String getIp(String token){
+        for (int i = 0; i < listaContatos.size(); i++) {
+            if( listaContatos.get( i ).getToken().equals( token ) ){
+                return listaContatos.get( i ).getIp();
+            }
+        }
+        return null;
+    }
+    
+    public String getPorta(String token){
+        for (int i = 0; i < listaContatos.size(); i++) {
+            if( listaContatos.get( i ).getToken().equals( token ) ){
+                return listaContatos.get( i ).getPorta();
+            }
+        }
+        return null;
+    }
 }

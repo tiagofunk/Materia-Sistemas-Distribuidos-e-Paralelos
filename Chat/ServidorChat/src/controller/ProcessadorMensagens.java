@@ -16,6 +16,7 @@ public class ProcessadorMensagens implements ObservadorConexao{
         String[] partes = mensagem.trim().split(":");
         String[] destinatario = partes[0].split(";");
         
+        System.out.println(partes[1]);
         switch( partes[1] ){
             case Constantes.CRIAR_USUARIO:
                 valores = partes[2].split(";");
@@ -53,18 +54,20 @@ public class ProcessadorMensagens implements ObservadorConexao{
                 }
                 break;
                 
-            case Constantes.ADICIONAR_USUARIO:
+            case Constantes.ADICIONAR_CONTATO:
                 valores = partes[2].split(";");
-                if( valores.length != 3 ){
+                if( valores.length != 2 ){
                     try {
                         throw new Exception(
-                            "adicionar_contato não possue três parâmetros: "
+                            "adicionar_contato não possue dois parâmetros: "
                             + mensagem );
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }else{
-                    controle.adicionarContato( valores[0], valores[1], valores[2] );
+                    controle.adicionarContato(
+                        valores[0], valores[1],
+                        destinatario[0], destinatario[1] );
                 }
                 break;
                 
