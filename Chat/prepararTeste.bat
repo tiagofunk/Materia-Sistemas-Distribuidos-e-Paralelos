@@ -5,3 +5,6 @@ copy "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\ClienteCh
 
 copy "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\ClienteChat\dist\ClienteChat.jar" "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\Teste\cliente_2"
 
+copy "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\ClienteChat\dist\ClienteChat.jar" "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\Teste\cliente_3"
+
+copy "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\ClienteChat\dist\ClienteChat.jar" "C:\Users\10516125940\Documents\GitHub\DistribuidosParalelos\Chat\Teste\cliente_4"
