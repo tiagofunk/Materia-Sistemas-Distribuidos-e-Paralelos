@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DaoContato {
     
@@ -16,6 +18,7 @@ public class DaoContato {
         bw.write( token1+";"+token2 );
         bw.newLine();
         bw.write( token2+";"+token1 );
+        bw.newLine();
         bw.close();
     }
     
@@ -32,5 +35,21 @@ public class DaoContato {
         }
         br.close();
         return false;
+    }
+
+    public static List<String> lerTodosContatos(String token) throws FileNotFoundException, IOException {
+        String linha;
+        String[] valores;
+        List<String> contatos = new ArrayList<>();
+        BufferedReader br = new BufferedReader( new FileReader( DAO ) );
+        
+        while( (linha = br.readLine() ) != null ){
+            valores = linha.split(";");
+            if( valores[0].equals( token ) ){
+                contatos.add( valores[1] );
+            }
+        }
+        br.close();
+        return contatos;
     }
 }

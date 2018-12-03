@@ -7,8 +7,14 @@ import java.util.List;
 public class Sessao {
     
     private List<Contato> listaContatos = new ArrayList<>();
+    
+    private List<ObservadorSessao> listaObs = new ArrayList<>();
 
     public Sessao() {
+    }
+    
+    public void adicionarObservador(ObservadorSessao obs){
+        listaObs.add( obs );
     }
     
     public synchronized void adicionarContato( Contato c ){
@@ -22,6 +28,9 @@ public class Sessao {
         }
         if( posicao == -1 ){
             listaContatos.add( c );
+            for(ObservadorSessao obs: listaObs){
+                obs.avisarConexao( c.getToken() );
+            }
         }else{
             listaContatos.set( posicao, c );
         }
@@ -43,6 +52,10 @@ public class Sessao {
         for (int i = 0; i < listaContatos.size(); i++) {
             if( c.getToken().equals( listaContatos.get( i ).getToken() ) ){
                 listaContatos.remove( i );
+                for(ObservadorSessao obs: listaObs){
+                    obs.avisarDesconexao( c.getToken() );
+                }
+                break;
             }
         }
     }
@@ -53,7 +66,7 @@ public class Sessao {
             tempoAtual = System.currentTimeMillis();
             if( (tempoAtual - listaContatos.get( i ).getTempoUltimaConexao() ) 
                     > Constantes.TEMPO_ESPERA ){
-                listaContatos.remove( i );
+                removerContato( listaContatos.get( i ) );
             }
         }
     }

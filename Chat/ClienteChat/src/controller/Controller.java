@@ -3,8 +3,6 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Constantes;
 import model.Contato;
 import model.Conversa;
@@ -14,7 +12,7 @@ import persistence.DaoConversa;
 import persistence.LeitorConfiguracoes;
 import server.Conexao;
 
-public class Controller {
+public class Controller{
     
     private static String token;
     private static String senha;
@@ -38,7 +36,6 @@ public class Controller {
     }
     
     public void carregarConversas(){
-        System.out.println("carregando as conversas");
         try {
             listaConversas = DaoConversa.lerConversas();
         } catch (IOException ex) {
@@ -100,22 +97,6 @@ public class Controller {
         }
     }
 
-    public void conectarContato() {
-
-    }
-
-    public void informarStatusConexao() {
-
-    }
-
-    public void enviarMensagem() {
-
-    }
-
-    public void alterarDados() {
-
-    }
-
     public void salvarUsuario(String token) {
         this.token = token;
         try {
@@ -132,7 +113,7 @@ public class Controller {
         this.autenticarUsuario(token, senha);
     }
 
-    void sucessoAutenticacao() {
+    public void sucessoAutenticacao() {
         for(ObservadorTelaNovoUsuario obs: listaObsTelaNovoUsuario){
             obs.fechar();
         }
@@ -153,7 +134,7 @@ public class Controller {
         mc.start();
     }
 
-    void salvarContato(String token) {
+    public void salvarContato(String token) {
         try {
             DaoContato.salvarContao(token);
             
@@ -167,6 +148,32 @@ public class Controller {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void avisarConexaoContato(String token, String ip, String porta) {
+        for(Conversa c:listaConversas){
+            if( c.getContato().getToken().equals( token ) ){
+                c.getContato().setIp(ip);
+                c.getContato().setPorta( Integer.parseInt(porta) );
+                c.getContato().setStatus( true );
+                break;
+            }
+        }
+        for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
+            obs.atualizarConversas(listaConversas);
+        }
+    }
+    
+    public void avisarDesconexaoContato(String token){
+        for(Conversa c:listaConversas){
+            if( c.getContato().getToken().equals( token ) ){
+                c.getContato().setStatus( false );
+                break;
+            }
+        }
+        for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
+            obs.atualizarConversas(listaConversas);
         }
     }
 
