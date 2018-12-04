@@ -7,6 +7,7 @@ import model.Constantes;
 import model.Contato;
 import model.Conversa;
 import model.MantenedorConexao;
+import model.Mensagem;
 import persistence.DaoContato;
 import persistence.DaoConversa;
 import persistence.LeitorConfiguracoes;
@@ -19,6 +20,7 @@ public class Controller{
     private static String nome;
     private static String telefone;
     
+    private int indiceConversaAtual = 0;
     private List<Conversa> listaConversas = new ArrayList<>();
     
     private List<ObservadorTelaNovoUsuario> listaObsTelaNovoUsuario = new ArrayList<>();
@@ -174,6 +176,43 @@ public class Controller{
         }
         for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
             obs.atualizarConversas(listaConversas);
+        }
+    }
+
+    public void carregarConversas(int indiceLinha) {
+        this.indiceConversaAtual = indiceLinha;
+        for(ObservadorTelaPrincipal obs: listaObsTelaPrincipal){
+            obs.carregarConversa( listaConversas.get(indiceLinha) );
+        }
+    }
+
+    public void enviarMensagem(String mensagem) {
+        Conversa conversaAtual = listaConversas.get( indiceConversaAtual );
+        try {
+            Conexao conexao = new Conexao( conversaAtual.getContato().getIp(), conversaAtual.getContato().getPorta() );
+            conexao.enviar(Constantes.ENVIAR_MENSAGEM+":"+token+";"+mensagem);
+            conexao.enviar(mensagem);
+            conversaAtual.adicionarMensagem( new Mensagem(mensagem, true) );
+            for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
+                obs.carregarConversa(conversaAtual);
+            }
+        } catch (IOException ex) {
+            for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
+                obs.avisarErroEnviarMensagem();
+            }
+            ex.printStackTrace();
+        }
+    }
+
+    public void receberMensagem(String token, String mensagem) {
+        for(Conversa con:listaConversas){
+            if( con.getContato().getToken().equals( token ) ){
+                con.adicionarMensagem( new Mensagem(mensagem, false) );
+                break;
+            }
+        }
+        for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
+            obs.carregarConversa( listaConversas.get( indiceConversaAtual ) );
         }
     }
 

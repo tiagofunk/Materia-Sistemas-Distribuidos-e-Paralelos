@@ -16,6 +16,10 @@ public class Conversa {
         listaMensagens.add(m);
     }
 
+    public List<Mensagem> getListaMensagens() {
+        return listaMensagens;
+    }
+
     public Contato getContato() {
         return contato;
     }

@@ -1,7 +1,7 @@
-token:null
-senha:null
-nome:null
-telefone:null
+token:7
+senha:senha
+nome:antonio
+telefone:345
 ipServidorRemoto:127.0.0.1
 portaServidorRemoto:56000
 ipServidor:127.0.0.1

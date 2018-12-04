@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.Conversa;
+import model.Mensagem;
 import persistence.LeitorConfiguracoes;
 import server.ObservadorConexao;
 import server.Servidor;
@@ -36,11 +38,12 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         campoTextoMensagem = new javax.swing.JTextField();
         botaoEnviar = new javax.swing.JButton();
         labelDadosUsuario = new javax.swing.JLabel();
-        labelMensagens = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         campoTextoNovoContato = new javax.swing.JTextField();
         botaoAdicionar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        areaTextoMensagens = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,9 +55,19 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 "Contatos", "Status"
             }
         ));
+        tabelaContatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaContatosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelaContatos);
 
         botaoEnviar.setText("Enviar");
+        botaoEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEnviarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Dados:");
 
@@ -66,6 +79,10 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 botaoAdicionarActionPerformed(evt);
             }
         });
+
+        areaTextoMensagens.setColumns(20);
+        areaTextoMensagens.setRows(5);
+        jScrollPane2.setViewportView(areaTextoMensagens);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -85,7 +102,7 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                                 .addGap(77, 77, 77)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(campoTextoMensagem, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                                    .addComponent(labelMensagens, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(jScrollPane2))))
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
@@ -102,13 +119,13 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelMensagens, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
                                 .addComponent(campoTextoNovoContato, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(botaoAdicionar)))
+                                .addComponent(botaoAdicionar))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(campoTextoMensagem, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -127,8 +144,17 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
         controle.adicionarContato( campoTextoNovoContato.getText() );
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
+    private void tabelaContatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaContatosMouseClicked
+        controle.carregarConversas( tabelaContatos.getSelectedRow() );
+    }//GEN-LAST:event_tabelaContatosMouseClicked
+
+    private void botaoEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviarActionPerformed
+        controle.enviarMensagem( campoTextoMensagem.getText() );
+    }//GEN-LAST:event_botaoEnviarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea areaTextoMensagens;
     private javax.swing.JButton botaoAdicionar;
     private javax.swing.JButton botaoEnviar;
     private javax.swing.JTextField campoTextoMensagem;
@@ -136,8 +162,8 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelDadosUsuario;
-    private javax.swing.JLabel labelMensagens;
     private javax.swing.JTable tabelaContatos;
     // End of variables declaration//GEN-END:variables
 
@@ -210,9 +236,22 @@ public class Tela extends javax.swing.JFrame implements ObservadorTelaPrincipal{
             );
         }
     }
+    
+    @Override
+    public void carregarConversa(Conversa conversa) {
+        final String TOPO = "Conversa:\n\n";
+        String s = "";
+        for( Mensagem mensagem: conversa.getListaMensagens() ){
+            if( mensagem.isClienteEnviou() ){
+                s += "\t\t";
+            }
+            s += mensagem.getTexto()+"\n";
+        }
+        areaTextoMensagens.setText( TOPO + s );
+    }
 
     @Override
-    public void adicionarMensagen(String token, String mensagem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void avisarErroEnviarMensagem() {
+        JOptionPane.showMessageDialog(this, "Erro ao enviar mensagem");
     }
 }

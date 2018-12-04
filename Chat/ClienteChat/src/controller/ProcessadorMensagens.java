@@ -34,7 +34,12 @@ public class ProcessadorMensagens implements ObservadorConexao{
             
             case Constantes.INFORMAR_DESCONEXAO_CONTATO:
                 controle.avisarDesconexaoContato( partes[1] );
-                 break;
+                break;
+                 
+            case Constantes.ENVIAR_MENSAGEM:
+                valores = partes[1].split(";");
+                controle.receberMensagem( valores[0], valores[1] );
+                break;
                 
             default:
                 System.out.println("Tipo de mensagem inválida: " + mensagem);

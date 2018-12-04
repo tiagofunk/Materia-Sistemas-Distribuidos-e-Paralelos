@@ -12,6 +12,14 @@ public class Conexao{
     private Socket socket;
     private ObjectOutputStream output;
     
+    public Conexao( String host, int port) throws IOException{
+        this.host = host;
+        this.port = port;
+        
+        socket = new Socket( host, this.port );
+        output = new ObjectOutputStream( socket.getOutputStream() );
+    }
+    
     public Conexao(String host, String port) throws IOException {
         this.host = host;
         try{

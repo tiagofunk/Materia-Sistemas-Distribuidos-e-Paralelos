@@ -9,5 +9,8 @@ public interface ObservadorTelaPrincipal {
     public void inserirDadosUsuario(String token, String nome, String telefone);
     
     public void atualizarConversas( List<Conversa> listaConversas );
-    public void adicionarMensagen( String token, String mensagem );
+
+    public void carregarConversa(Conversa conversa);
+
+    public void avisarErroEnviarMensagem();
 }
