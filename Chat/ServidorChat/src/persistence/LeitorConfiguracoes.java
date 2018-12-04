@@ -1,6 +1,6 @@
 package persistence;
 
-import controller.Constantes;
+import model.Constantes;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;

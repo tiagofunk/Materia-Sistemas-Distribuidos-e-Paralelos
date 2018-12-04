@@ -1,6 +1,5 @@
 package model;
 
-import controller.Constantes;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package controller;
 
+import model.Constantes;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,13 +78,14 @@ public class Controller implements ObservadorSessao{
         try {
             Contato contato = DaoCliente.buscarContato( token );
             if( contato != null && contato.getSenha().equals( senha ) ){
+                Conexao conexao = new Conexao(ip, porta);
+                conexao.enviar( Constantes.CONFIRMAR_AUTENTICACAO );
+                conexao.fecharConexao();
+                
                 contato.setIp(ip);
                 contato.setPorta(porta);
                 sessao.adicionarContato( contato );
                 
-                Conexao conexao = new Conexao(ip, porta);
-                conexao.enviar( Constantes.CONFIRMAR_AUTENTICACAO );
-                conexao.fecharConexao();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -111,16 +113,8 @@ public class Controller implements ObservadorSessao{
         }
     }
 
-    public void confirmarHash(String token, String hash) {
-
-    }
-
     public void informarStatusContatos(String token) {
         sessao.atualizarContato( token );
-    }
-
-    public void alterarDados(String token, String senha, String nome, String telefone) {
-
     }
 
     public Sessao getSessao() {

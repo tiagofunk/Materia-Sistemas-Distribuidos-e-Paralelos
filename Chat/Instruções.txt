@@ -1,0 +1,37 @@
+Para rodar o servidor:
+	Na mesma pasta do do jar coloque três arquivos:
+		cliente.txt (deve estar vazio)
+		contato.txt (deve estar vazio)
+		conf.txt com o conteúdo: portaServidor:<porta>, aonde porta vai ser a porta que o servidor vai rodar.
+	
+	Depois basta executar o comando:
+		java -jar ServidorChat.jar
+
+Para rodar o cliente:
+	Na mesma pasta do do jar coloque dois arquivos:
+		contato.txt (deve estar vazio)
+		conf.txt com o conteúdo: 
+			token:null
+			senha:null
+			nome:null
+			telefone:null
+			ipServidorRemoto:<IpRemoto>, aonde IpRemoto é o endereço ip do servidor remoto.
+			portaServidorRemoto:<PortaRemoto>, aonde PortaRemoto é a porta do servidor remoto.
+			ipServidor:<IpLocal>, aonde IpLocal é o endereço do máquina que esta rodando o cliente.
+			portaServidor:<PortaLocal>, aonde PortaLocal é a porta que o cliente vai ficar escutando para receber mensagens. 
+	
+	Depois basta executar o comando:
+		java -jar ServidorChat.jar
+
+Observações:
+	O servidor ao ser executado vai abrir uma janela que mostra quem esta conectado no momento, leva cinco segundos para atualizar.
+	
+	Quando o cliente é executado e nenhum usuario foi cadastrado, vai mostrar uma tela para criar usuario.
+	Quando o cliente já foi cadastrado, vai direto para a tela de chat, mas os dados de usuario ficam no arquivo conf.txt
+	Para ver uma conversa, clique na tela com o status das conexões.
+	Ao adicionar um novo contato, ele deve aparecer na tabela de contatos, se isso não ocorrer, tente fechar, aguardar 6 segundos e abrir o cliente novamente.
+	Ao abrir o cliente, se você tiver contatos salvos e eles não aparecerem como online, mesmo eles estanto online, tente fechar, aguardar seis segundos e abrir novamente a aplicação.
+	Ao enviar uma mensagem, tenha certeza que selecionou uma conversa.
+	
+	Mesmo seguindo as instruções acima, se você tiver problemas ao enviar uma mensagem em uma conversa, tente fechar as aplicações (ambas), aguardar seis segundos (para elas aparecerem como offline no servidor) e abras elas novamente. O motivo dessa instabilidade na conversa não foi descoberto, peço desculpas por isso.
+	 

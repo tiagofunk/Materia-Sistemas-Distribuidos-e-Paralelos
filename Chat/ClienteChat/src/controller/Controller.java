@@ -154,6 +154,7 @@ public class Controller{
     }
 
     public void avisarConexaoContato(String token, String ip, String porta) {
+        System.out.println(">>>" + token + " " + ip + " " + porta);
         for(Conversa c:listaConversas){
             if( c.getContato().getToken().equals( token ) ){
                 c.getContato().setIp(ip);
@@ -189,18 +190,22 @@ public class Controller{
     public void enviarMensagem(String mensagem) {
         Conversa conversaAtual = listaConversas.get( indiceConversaAtual );
         try {
-            Conexao conexao = new Conexao( conversaAtual.getContato().getIp(), conversaAtual.getContato().getPorta() );
+            System.out.println(">>>>"+conversaAtual.getContato().getIp());
+            System.out.println(">>>>"+conversaAtual.getContato().getPorta());
+            Conexao conexao = new Conexao(
+                conversaAtual.getContato().getIp(),
+                conversaAtual.getContato().getPorta() );
             conexao.enviar(Constantes.ENVIAR_MENSAGEM+":"+token+";"+mensagem);
-            conexao.enviar(mensagem);
+            conexao.fecharConexao();
             conversaAtual.adicionarMensagem( new Mensagem(mensagem, true) );
             for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
                 obs.carregarConversa(conversaAtual);
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
             for(ObservadorTelaPrincipal obs:listaObsTelaPrincipal){
                 obs.avisarErroEnviarMensagem();
             }
-            ex.printStackTrace();
         }
     }
 

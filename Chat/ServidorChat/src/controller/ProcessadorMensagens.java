@@ -1,5 +1,6 @@
 package controller;
 
+import model.Constantes;
 import server.ObservadorConexao;
 
 public class ProcessadorMensagens implements ObservadorConexao{
@@ -82,21 +83,6 @@ public class ProcessadorMensagens implements ObservadorConexao{
                     }
                 }else{
                     controle.informarStatusContatos( valores[0] );
-                }
-                break;
-                
-            case Constantes.ALTERAR_DADOS:
-                valores = partes[2].split(";");
-                if( valores.length != 4 ){
-                    try {
-                        throw new Exception(
-                            "alterar_dados não possue dois parâmetros: "
-                            + mensagem );
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }else{
-                    controle.alterarDados(valores[0], valores[1], valores[2], valores[3] );
                 }
                 break;
                 
